@@ -31,6 +31,22 @@ namespace GeoFlat.Server.Models
                                      .WithMany(x => x.ReceviedMessages)
                                      .HasForeignKey(x => x.Recipient)
                                      .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.Entity<Favorite>().HasOne(x => x.User)
+                                     .WithMany(x => x.Favorites)                                   
+                                     .OnDelete(DeleteBehavior.ClientSetNull);
+           
+            builder.Entity<Favorite>().HasOne(x => x.Record)
+                                     .WithMany(x => x.Favorites)
+                                     .OnDelete(DeleteBehavior.ClientSetNull);
+           
+            builder.Entity<Comparison>().HasOne(x => x.User)
+                                     .WithMany(x => x.Comparisons)
+                                     .OnDelete(DeleteBehavior.ClientSetNull);
+           
+            builder.Entity<Comparison>().HasOne(x => x.Record)
+                                     .WithMany(x => x.Comparisons)
+                                     .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

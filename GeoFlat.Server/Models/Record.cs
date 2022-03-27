@@ -74,5 +74,6 @@ namespace GeoFlat.Server.Models
         public int UserId { get; set; }
         public User User { get; set; }
         public List<Favorite> Favorites { get; set; } = new List<Favorite>();
+        public List<Comparison> Comparisons { get; set; } = new List<Comparison>();
     }
 }

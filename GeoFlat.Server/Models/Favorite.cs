@@ -14,8 +14,8 @@ namespace GeoFlat.Server.Models
         [Column("id")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }     
-        public int UserId { get; set; }
-        public int RecordId { get; set; }
+        public int? UserId { get; set; }
+        public int? RecordId { get; set; }
         public User User { get; set; }
         public Record Record { get; set; }        
     }
