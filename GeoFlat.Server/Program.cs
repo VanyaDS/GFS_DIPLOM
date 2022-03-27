@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
 
 namespace GeoFlat.Server
 {
@@ -7,6 +9,12 @@ namespace GeoFlat.Server
     {
         public static void Main(string[] args)
         {
+            if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\Photos"))
+            {
+                string folderName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Photos");
+                Directory.CreateDirectory(folderName);
+            }
+
             CreateHostBuilder(args).Build().Run();
         }
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -14,6 +22,10 @@ namespace GeoFlat.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel(opts =>
+                    {
+                        opts.ListenAnyIP(5050);
+                    });
                 });
     }
 }
