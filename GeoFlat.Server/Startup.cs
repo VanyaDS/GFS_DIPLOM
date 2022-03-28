@@ -1,4 +1,5 @@
 using GeoFlat.Server.Models;
+using GeoFlat.Server.Models.Database.Entities.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace GeoFlat.Server
             });
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

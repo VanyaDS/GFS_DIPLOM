@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace GeoFlat.Server.Models
+namespace GeoFlat.Server.Models.Database.Entities
 {
     [Table("Geolocation")]
     public class Geolocation

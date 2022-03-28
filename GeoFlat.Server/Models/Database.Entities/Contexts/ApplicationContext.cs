@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace GeoFlat.Server.Models
+namespace GeoFlat.Server.Models.Database.Entities.Contexts
 {
     public class ApplicationDbContext : DbContext
     {

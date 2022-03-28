@@ -22,10 +22,10 @@ namespace GeoFlat.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseKestrel(opts =>
-                    {
-                        opts.ListenAnyIP(5050);
-                    });
+                    //webBuilder.UseKestrel(opts =>
+                    //{
+                    //    opts.ListenAnyIP(5050);
+                    //});
                 });
     }
 }

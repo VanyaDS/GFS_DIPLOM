@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace GeoFlat.Server.Models
+namespace GeoFlat.Server.Models.Database.Entities
 {
     [Table("Flat")]
     public class Flat
