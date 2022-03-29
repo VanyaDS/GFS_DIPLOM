@@ -27,7 +27,7 @@ namespace GeoFlat.Server.Models.Database.Entities
         [Column("role")]
         [MaxLength(50)]
         [Required]
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
         public Role Role { get; set; }
         public User User { get; set; }
     }

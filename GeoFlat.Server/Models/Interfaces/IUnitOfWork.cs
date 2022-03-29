@@ -1,7 +1,7 @@
 ﻿using GeoFlat.Server.Models.Repositories;
 using System.Threading.Tasks;
 
-namespace GeoFlat.Server.Models
+namespace GeoFlat.Server.Models.Interfaces
 {
     public interface IUnitOfWork
     {

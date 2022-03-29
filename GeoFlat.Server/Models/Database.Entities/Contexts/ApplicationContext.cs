@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GeoFlat.Server.Models.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace GeoFlat.Server.Models.Database.Entities.Contexts
 {
@@ -25,7 +26,7 @@ namespace GeoFlat.Server.Models.Database.Entities.Contexts
                                      .WithMany(x => x.SentMessages)
                                      .HasForeignKey(x => x.Sender)
                                      .OnDelete(DeleteBehavior.ClientSetNull);
-                                      
+
 
             builder.Entity<Message>().HasOne(x => x.UserRecipient)
                                      .WithMany(x => x.ReceviedMessages)
@@ -33,20 +34,40 @@ namespace GeoFlat.Server.Models.Database.Entities.Contexts
                                      .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.Entity<Favorite>().HasOne(x => x.User)
-                                     .WithMany(x => x.Favorites)                                   
+                                     .WithMany(x => x.Favorites)
                                      .OnDelete(DeleteBehavior.ClientSetNull);
-           
+
             builder.Entity<Favorite>().HasOne(x => x.Record)
                                      .WithMany(x => x.Favorites)
                                      .OnDelete(DeleteBehavior.ClientSetNull);
-           
+
             builder.Entity<Comparison>().HasOne(x => x.User)
                                      .WithMany(x => x.Comparisons)
                                      .OnDelete(DeleteBehavior.ClientSetNull);
-           
+
             builder.Entity<Comparison>().HasOne(x => x.Record)
                                      .WithMany(x => x.Comparisons)
                                      .OnDelete(DeleteBehavior.ClientSetNull);
+            builder.Entity<Account>().HasOne(x => x.Role)
+                                     .WithOne(x => x.Account)
+                                     .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.Entity<Role>().HasData(
+                new Role[]
+                {
+                    new Role{Id = 1, Name = "administrator", AccessLevel = (int)AccessLevel.FullAccess},
+                    new Role{Id = 2, Name = "moderator", AccessLevel = (int)AccessLevel.LimitedAccess},
+                    new Role{Id = 3, Name = "client", AccessLevel = (int)AccessLevel.BasicAccess}
+                });
+           
+            builder.Entity<Account>().HasData(               
+            new Account{ Id = 1, Email = "geoflatbel@gmail.com", Password = "Password1", RoleId = 1});
+           
+            builder.Entity<User>().HasData(
+            new User { Id = 1, Name = "admin", Surname = "admin", PhoneNumber = "+375291110011", AccountId = 1});
+
+
+
         }
     }
 }

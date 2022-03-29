@@ -1,5 +1,6 @@
 ﻿using GeoFlat.Server.Models;
 using GeoFlat.Server.Models.Database.Entities;
+using GeoFlat.Server.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;

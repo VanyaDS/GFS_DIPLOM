@@ -76,7 +76,7 @@ namespace GeoFlat.Server.Migrations
                         column: x => x.role,
                         principalTable: "Role",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,6 +220,31 @@ namespace GeoFlat.Server.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "id", "access_level", "name" },
+                values: new object[] { 1, 0, "administrator" });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "id", "access_level", "name" },
+                values: new object[] { 2, 1, "moderator" });
+
+            migrationBuilder.InsertData(
+                table: "Role",
+                columns: new[] { "id", "access_level", "name" },
+                values: new object[] { 3, 2, "client" });
+
+            migrationBuilder.InsertData(
+                table: "Account",
+                columns: new[] { "id", "email", "password", "role" },
+                values: new object[] { 1, "geoflatbel@gmail.com", "Password1", 1 });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "id", "AccountId", "name", "phone_number", "surname" },
+                values: new object[] { 1, 1, "admin", "+375291110011", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "Email_Index",

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace GeoFlat.Server.Models.Repositories
+namespace GeoFlat.Server.Models.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {

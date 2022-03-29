@@ -1,5 +1,6 @@
 using GeoFlat.Server.Models;
 using GeoFlat.Server.Models.Database.Entities.Contexts;
+using GeoFlat.Server.Models.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,5 @@
 ﻿using GeoFlat.Server.Models.Database.Entities.Contexts;
+using GeoFlat.Server.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
