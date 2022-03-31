@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class ComparisonRepository : GenericRepository<Comparison>, IComparisonRepository
     {
-        public UserRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
+        public ComparisonRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
-        public override async Task<IEnumerable<User>> All()
+        public override async Task<IEnumerable<Comparison>> All()
         {
             try
             {
@@ -22,30 +22,30 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} All function error", typeof(UserRepository));
-                return new List<User>();
+                _logger.LogError(ex, "{Repo} All function error", typeof(ComparisonRepository));
+                return new List<Comparison>();
             }
         }
 
-        public override async Task<bool> Update(User entity)
+        public override async Task<bool> Update(Comparison entity)
         {
             try
             {
-                var existingUser = await dbSet.Where(x => x.Id == entity.Id)
+                var existingComparison = await dbSet.Where(x => x.Id == entity.Id)
                                                     .FirstOrDefaultAsync();
 
-                if (existingUser == null)
+                if (existingComparison == null)
                     return await Add(entity);
 
-                existingUser.Name = entity.Name;
-                existingUser.PhoneNumber = entity.PhoneNumber;
-                existingUser.Surname = entity.Surname;
+                existingComparison.RecordId = entity.RecordId;
+                existingComparison.UserId = entity.UserId;
+
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Upsert function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Upsert function error", typeof(ComparisonRepository));
                 return false;
             }
         }
@@ -65,7 +65,7 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Delete function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(ComparisonRepository));
                 return false;
             }
         }

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class MessageRepository : GenericRepository<Message>, IMessageRepository
     {
-        public UserRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
+        public MessageRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
-        public override async Task<IEnumerable<User>> All()
+        public override async Task<IEnumerable<Message>> All()
         {
             try
             {
@@ -22,30 +22,28 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} All function error", typeof(UserRepository));
-                return new List<User>();
+                _logger.LogError(ex, "{Repo} All function error", typeof(MessageRepository));
+                return new List<Message>();
             }
         }
 
-        public override async Task<bool> Update(User entity)
+        public override async Task<bool> Update(Message entity)
         {
             try
             {
-                var existingUser = await dbSet.Where(x => x.Id == entity.Id)
+                var existingMessage = await dbSet.Where(x => x.Id == entity.Id)
                                                     .FirstOrDefaultAsync();
 
-                if (existingUser == null)
+                if (existingMessage == null)
                     return await Add(entity);
 
-                existingUser.Name = entity.Name;
-                existingUser.PhoneNumber = entity.PhoneNumber;
-                existingUser.Surname = entity.Surname;
+                existingMessage.MessageText = entity.MessageText;
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Upsert function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Upsert function error", typeof(MessageRepository));
                 return false;
             }
         }
@@ -65,7 +63,7 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Delete function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(MessageRepository));
                 return false;
             }
         }

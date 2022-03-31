@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class FlatRepository : GenericRepository<Flat>, IFlatRepository
     {
-        public UserRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
+        public FlatRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
-        public override async Task<IEnumerable<User>> All()
+        public override async Task<IEnumerable<Flat>> All()
         {
             try
             {
@@ -22,30 +22,31 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} All function error", typeof(UserRepository));
-                return new List<User>();
+                _logger.LogError(ex, "{Repo} All function error", typeof(FlatRepository));
+                return new List<Flat>();
             }
         }
 
-        public override async Task<bool> Update(User entity)
+        public override async Task<bool> Update(Flat entity)
         {
             try
             {
-                var existingUser = await dbSet.Where(x => x.Id == entity.Id)
+                var existingFlat = await dbSet.Where(x => x.Id == entity.Id)
                                                     .FirstOrDefaultAsync();
 
-                if (existingUser == null)
+                if (existingFlat == null)
                     return await Add(entity);
 
-                existingUser.Name = entity.Name;
-                existingUser.PhoneNumber = entity.PhoneNumber;
-                existingUser.Surname = entity.Surname;
+                existingFlat.RoomNumber = entity.RoomNumber;
+                existingFlat.Area = entity.Area;
+                existingFlat.Floor = entity.Floor;
+                existingFlat.GeolocationId = entity.GeolocationId;             
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Upsert function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Upsert function error", typeof(FlatRepository));
                 return false;
             }
         }
@@ -65,7 +66,7 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Delete function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(FlatRepository));
                 return false;
             }
         }

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class RoleRepository : GenericRepository<Role>, IRoleRepository
     {
-        public UserRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
+        public RoleRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
-        public override async Task<IEnumerable<User>> All()
+        public override async Task<IEnumerable<Role>> All()
         {
             try
             {
@@ -22,30 +22,29 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} All function error", typeof(UserRepository));
-                return new List<User>();
+                _logger.LogError(ex, "{Repo} All function error", typeof(RoleRepository));
+                return new List<Role>();
             }
         }
 
-        public override async Task<bool> Update(User entity)
+        public override async Task<bool> Update(Role entity)
         {
             try
             {
-                var existingUser = await dbSet.Where(x => x.Id == entity.Id)
+                var existingRole = await dbSet.Where(x => x.Id == entity.Id)
                                                     .FirstOrDefaultAsync();
 
-                if (existingUser == null)
+                if (existingRole == null)
                     return await Add(entity);
 
-                existingUser.Name = entity.Name;
-                existingUser.PhoneNumber = entity.PhoneNumber;
-                existingUser.Surname = entity.Surname;
+                existingRole.AccessLevel = entity.AccessLevel;
+                existingRole.Name = entity.Name;
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Upsert function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Upsert function error", typeof(RoleRepository));
                 return false;
             }
         }
@@ -65,7 +64,7 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Delete function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(RoleRepository));
                 return false;
             }
         }

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class GeolocationRepository : GenericRepository<Geolocation>, IGeolocationRepository
     {
-        public UserRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
+        public GeolocationRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
 
-        public override async Task<IEnumerable<User>> All()
+        public override async Task<IEnumerable<Geolocation>> All()
         {
             try
             {
@@ -22,30 +22,30 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} All function error", typeof(UserRepository));
-                return new List<User>();
+                _logger.LogError(ex, "{Repo} All function error", typeof(GeolocationRepository));
+                return new List<Geolocation>();
             }
         }
 
-        public override async Task<bool> Update(User entity)
+        public override async Task<bool> Update(Geolocation entity)
         {
             try
             {
-                var existingUser = await dbSet.Where(x => x.Id == entity.Id)
+                var existingGeolocation = await dbSet.Where(x => x.Id == entity.Id)
                                                     .FirstOrDefaultAsync();
 
-                if (existingUser == null)
+                if (existingGeolocation == null)
                     return await Add(entity);
 
-                existingUser.Name = entity.Name;
-                existingUser.PhoneNumber = entity.PhoneNumber;
-                existingUser.Surname = entity.Surname;
+                existingGeolocation.HouseNumber = entity.HouseNumber;
+                existingGeolocation.StreetName = entity.StreetName;
+                existingGeolocation.CityName = entity.CityName;
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Upsert function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Upsert function error", typeof(GeolocationRepository));
                 return false;
             }
         }
@@ -65,7 +65,7 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Delete function error", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(GeolocationRepository));
                 return false;
             }
         }
