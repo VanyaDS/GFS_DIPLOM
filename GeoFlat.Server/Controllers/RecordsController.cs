@@ -18,6 +18,9 @@ namespace GeoFlat.Server.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        //private int +UserId => int.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        private int _UserId = 1;
+
         public RecordsController(
             ILogger<RecordsController> logger,
             IUnitOfWork unitOfWork,
@@ -71,7 +74,7 @@ namespace GeoFlat.Server.Controllers
                 var record = _mapper.Map<Record>(recordRequest);
 
                 record.PublicationDate = System.DateTime.Now;
-                record.UserId = 1;// change to current user id
+                record.UserId = _UserId;// change to current user id
                 flat.Geolocation = geolocation;
                 record.Flat = flat;
 
