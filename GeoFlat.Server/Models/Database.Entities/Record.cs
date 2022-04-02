@@ -35,37 +35,42 @@ namespace GeoFlat.Server.Models.Database.Entities
        
         [Column("price")]
         [Required]
-        public int Price { get; set; }
-        
-        [Column("room_number")]
-        [Required]
-        public int RoomNumber { get; set; }
+        public int Price { get; set; }       
 
         [Column("rent_type")]
+        [Required]
         public bool RentType { get; set; }
       
         [Column("rent_status")]
+        [Required]
         public bool RentStatus { get; set; }
        
         [Column("has_furniture")]
+        [Required]
         public bool HasFurniture { get; set; }
        
         [Column("not_for_students")]
+        [Required]
         public bool NotForStudents { get; set; }
        
         [Column("without_animals")]
+        [Required]
         public bool WithoutAnimals { get; set; }
        
         [Column("without_children")]
+        [Required]
         public bool WithoutChildren { get; set; }
        
         [Column("is_agent")]
+        [Required]
         public bool IsAgent { get; set; }
        
         [Column("with_internet")]
+        [Required]
         public bool WithInternet { get; set; }
        
         [Column("for_day")]
+        [Required]
         public bool ForDay { get; set; }
 
         public int FlatId { get; set; }

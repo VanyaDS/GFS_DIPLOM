@@ -1,3 +1,4 @@
+using GeoFlat.Server.Automapper;
 using GeoFlat.Server.Models;
 using GeoFlat.Server.Models.Database.Entities.Contexts;
 using GeoFlat.Server.Models.Interfaces;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 namespace GeoFlat.Server
 {
@@ -20,7 +22,9 @@ namespace GeoFlat.Server
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddAutoMapper(typeof(AppMappingProfile));
+             services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GeoFlat.Server", Version = "v1" });

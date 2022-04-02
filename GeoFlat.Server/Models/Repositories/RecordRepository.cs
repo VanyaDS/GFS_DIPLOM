@@ -38,7 +38,6 @@ namespace GeoFlat.Server.Models.Repositories
                     return await Add(entity);
 
                 existingRecord.PicturesPath = entity.PicturesPath;
-                existingRecord.RoomNumber = entity.RoomNumber;
                 existingRecord.WithoutChildren = entity.WithoutChildren;
                 existingRecord.HasFurniture = entity.HasFurniture;
                 existingRecord.Description = entity.Description;
