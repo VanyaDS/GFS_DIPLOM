@@ -23,7 +23,9 @@ namespace GeoFlat.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AppMappingProfile));
-             services.AddControllers().AddJsonOptions(x =>x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+           // services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            // services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {

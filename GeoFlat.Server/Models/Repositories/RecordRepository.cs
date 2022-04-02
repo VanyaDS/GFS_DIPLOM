@@ -18,7 +18,9 @@ namespace GeoFlat.Server.Models.Repositories
         {
             try
             {
-                return await dbSet.ToListAsync();
+                return await dbSet.Include(flat => flat.Flat)
+                                  .ThenInclude(flatGeo => flatGeo.Geolocation).
+                                  ToListAsync();
             }
             catch (Exception ex)
             {
@@ -31,11 +33,10 @@ namespace GeoFlat.Server.Models.Repositories
         {
             try
             {
-                var existingRecord = await dbSet.Where(x => x.Id == entity.Id)
-                                                    .FirstOrDefaultAsync();
-
-                if (existingRecord == null)
-                    return await Add(entity);
+                var existingRecord = await dbSet.Include(flat => flat.Flat)
+                                                .ThenInclude(flatGeo => flatGeo.Geolocation)
+                                                .Where(x => x.Id == entity.Id)
+                                                .FirstOrDefaultAsync();
 
                 existingRecord.PicturesPath = entity.PicturesPath;
                 existingRecord.WithoutChildren = entity.WithoutChildren;
@@ -49,10 +50,13 @@ namespace GeoFlat.Server.Models.Repositories
                 existingRecord.IsAgent = entity.IsAgent;
                 existingRecord.WithInternet = entity.WithInternet;
                 existingRecord.Price = entity.Price;
-                existingRecord.PublicationDate = entity.PublicationDate;
-                existingRecord.FlatId = entity.FlatId;
                 existingRecord.RentType = entity.RentType;
-                existingRecord.UserId = entity.UserId;
+                existingRecord.Flat.Area = entity.Flat.Area;
+                existingRecord.Flat.RoomNumber = entity.Flat.RoomNumber;
+                existingRecord.Flat.Floor = entity.Flat.Floor;
+                existingRecord.Flat.Geolocation.StreetName = entity.Flat.Geolocation.StreetName;
+                existingRecord.Flat.Geolocation.CityName = entity.Flat.Geolocation.CityName;
+                existingRecord.Flat.Geolocation.HouseNumber = entity.Flat.Geolocation.HouseNumber;            
 
                 return true;
             }
@@ -67,10 +71,15 @@ namespace GeoFlat.Server.Models.Repositories
         {
             try
             {
-                var exist = await dbSet.Where(x => x.Id == id)
-                                        .FirstOrDefaultAsync();
+                var exist = await dbSet.Include(flat => flat.Flat)
+                                                .ThenInclude(flatGeo => flatGeo.Geolocation)
+                                                .Where(x => x.Id == id)
+                                                .FirstOrDefaultAsync();
 
-                if (exist == null) return false;
+                if (exist is null)
+                {
+                    return false;
+                }
 
                 dbSet.Remove(exist);
 

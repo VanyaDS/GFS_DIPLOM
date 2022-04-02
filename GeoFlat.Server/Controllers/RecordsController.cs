@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using GeoFlat.Server.Automapper.RequestModels;
+using GeoFlat.Server.Automapper.ResponseModels;
 using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Controllers
@@ -25,12 +27,33 @@ namespace GeoFlat.Server.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetRecords()
         {
             var records = await _unitOfWork.Records.All();
-            return Ok(records);
+            List<RecordResponse> recordsResponse = new List<RecordResponse>();
+            if (records is not null)
+            {
+                foreach (var record in records)
+                {
+                    recordsResponse.Add(_mapper.Map<RecordResponse>(record));
+                }
+            }
+            return Ok(recordsResponse);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRecord(int id)
+        {
+            var record = await _unitOfWork.Records.GetById(id);
+
+            if (record is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<RecordResponse>(record));
         }
 
         [HttpPost]
@@ -48,30 +71,69 @@ namespace GeoFlat.Server.Controllers
                 var record = _mapper.Map<Record>(recordRequest);
 
                 record.PublicationDate = System.DateTime.Now;
-                record.UserId = 1;
+                record.UserId = 1;// change to current user id
                 flat.Geolocation = geolocation;
                 record.Flat = flat;
-                await _unitOfWork.Records.Add(record);
-                await _unitOfWork.CompleteAsync();
 
-                return Ok(record);
+                if (await _unitOfWork.Records.Add(record))
+                {
+                    await _unitOfWork.CompleteAsync();
+                    return Ok(_mapper.Map<RecordResponse>(record));
+                }
+            }
+            return BadRequest();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRecord(int id, RecordRequest recordRequest)
+        {
+            if (recordRequest is null)
+            {
+                return BadRequest();
             }
 
-            return new JsonResult("Somethign went wrong") { StatusCode = 500 };    
+            var anyRecord = await _unitOfWork.Records.GetById(id);
+
+            if (anyRecord is null)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                var geolocation = _mapper.Map<Geolocation>(recordRequest);
+                var flat = _mapper.Map<Flat>(recordRequest);
+                var record = _mapper.Map<Record>(recordRequest);
+                flat.Geolocation = geolocation;
+                record.Flat = flat;
+                record.Id = id;
+
+                if (await _unitOfWork.Records.Update(record))
+                {
+                    await _unitOfWork.CompleteAsync();
+                    return NoContent();
+                }
+
+            }
+            return BadRequest();
         }
-       
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRecord(int id)
-        {
-            var record = await _unitOfWork.Records.GetById(id);
 
-            if (record == null)
+            [HttpDelete("{id}")]
+            public async Task<IActionResult> DeleteRecord(int id)
+            {
+                var record = await _unitOfWork.Records.GetById(id);
+
+                if (record == null)
+                {
+                    return NotFound();
+                }
+
+                if (await _unitOfWork.Geolocations.Delete(id) /* to delete cascade*/ )
+                {
+                    await _unitOfWork.CompleteAsync();
+                    return NoContent();
+                }
+
                 return BadRequest();
-
-            await _unitOfWork.Geolocations.Delete(id); // to delete cascade
-            await _unitOfWork.CompleteAsync();
-
-            return Ok(record);
+            }
         }
     }
-}
