@@ -3,7 +3,6 @@ using GeoFlat.Server.Helpers;
 using GeoFlat.Server.Models.Authorization;
 using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -46,7 +44,7 @@ namespace GeoFlat.Server.Controllers
             if (account is not null)
             {
                 var token = GenerateJWT(account);
-               
+
                 return Ok(new
                 {
                     access_token = token
@@ -56,8 +54,8 @@ namespace GeoFlat.Server.Controllers
         }
         private async Task<Account> AuthenticateUserAsync(string email, string password)
         {
-          return await _unitOfWork.Accounts.FindSingleOrDefaultAsync(x => x.Email.Equals(email)
-                                  && x.Password.Equals(HashingMD5.GetHashStringMD5(password)));
+            return await _unitOfWork.Accounts.FindSingleOrDefaultAsync(x => x.Email.Equals(email)
+                                    && x.Password.Equals(HashingMD5.GetHashStringMD5(password)));
         }
         private string GenerateJWT(Account account)
         {

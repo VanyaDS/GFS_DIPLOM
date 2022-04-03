@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GeoFlat.Server.Automapper.RequestModels;
 using GeoFlat.Server.Automapper.ResponseModels;
+using GeoFlat.Server.Helpers;
 using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -61,7 +62,7 @@ namespace GeoFlat.Server.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> CreateRecord(RecordRequest recordRequest)
         {
             if (recordRequest == null)
@@ -89,7 +90,8 @@ namespace GeoFlat.Server.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}")]// TODO implement update of CURRENT user
+        [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> UpdateRecord(int id, RecordRequest recordRequest)
         {
             if (recordRequest is null)
@@ -122,23 +124,23 @@ namespace GeoFlat.Server.Controllers
             return BadRequest();
         }
 
-            [HttpDelete("{id}")]
-            public async Task<IActionResult> DeleteRecord(int id)
+        [HttpDelete("{id}")]
+        [Authorize(Roles = RoleHealper.ADMIN + "," + RoleHealper.MODER)]
+        public async Task<IActionResult> DeleteRecord(int id)
+        {
+            var record = await _unitOfWork.Records.GetById(id);
+
+            if (record == null)
             {
-                var record = await _unitOfWork.Records.GetById(id);
-
-                if (record == null)
-                {
-                    return NotFound();
-                }
-
-                if (await _unitOfWork.Geolocations.Delete(id) /* to delete cascade*/ )
-                {
-                    await _unitOfWork.CompleteAsync();
-                    return NoContent();
-                }
-
-                return BadRequest();
+                return NotFound();
             }
+
+            if (await _unitOfWork.Geolocations.Delete(id) /* to delete cascade*/ )
+            {
+                await _unitOfWork.CompleteAsync();
+                return NoContent();
+            }
+            return BadRequest();
         }
     }
+}

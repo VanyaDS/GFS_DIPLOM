@@ -57,6 +57,24 @@ namespace GeoFlat.Server.Automapper
 				.ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Flat.Geolocation.HouseNumber))
 				.ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Flat.Geolocation.HouseNumber))
 				.ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Flat.Geolocation.HouseNumber));
+
+			CreateMap<User, UserResponse>()
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname))
+				.ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+				.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Account.Email))
+				.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Account.Role));
+
+			CreateMap<UserRequest, User>()
+				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+				.ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname))
+				.ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
+
+			CreateMap<UserRequest, Account>()
+			.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+			.ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
+
 		}
 	}
 }

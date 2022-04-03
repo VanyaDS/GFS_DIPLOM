@@ -2,8 +2,8 @@
 {
     internal static  class RoleHealper
     {
-        public static readonly string Admin = "administrator";
-        public static readonly string Moder = "moderator";
-        public static readonly string Client = "client";
+        public const string ADMIN = "administrator";
+        public const string MODER = "moderator";
+        public const string CLIENT = "client";
     }
 }

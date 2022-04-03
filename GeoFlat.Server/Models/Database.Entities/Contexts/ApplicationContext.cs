@@ -55,7 +55,7 @@ namespace GeoFlat.Server.Models.Database.Entities.Contexts
                 Id = 1,
                 Email = "geoflatbel@gmail.com",
                 Password = HashingMD5.GetHashStringMD5("Password1"),
-                Role = RoleHealper.Admin
+                Role = RoleHealper.ADMIN
             });
 
             builder.Entity<User>().HasData(

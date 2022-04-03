@@ -15,7 +15,7 @@ namespace GeoFlat.Server.Models.Database.Entities
         public int Id { get; set; }
 
         [Column("pictures_path")]
-        [MaxLength(250)]
+        [DataType(DataType.MultilineText)]
         [Required]
         public string PicturesPath { get; set; }
 

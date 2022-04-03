@@ -28,6 +28,21 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Record>();
             }
         }
+        public override async Task<Record> GetById(int id)
+        {
+            try
+            {
+                return await dbSet.Include(flat => flat.Flat)
+                                  .ThenInclude(flatGeo => flatGeo.Geolocation)
+                                  .Where(record => record.Id == id)
+                                  .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} GetById function error", typeof(RecordRepository));
+                return null;
+            }          
+        }
 
         public override async Task<bool> Update(Record entity)
         {
@@ -67,6 +82,7 @@ namespace GeoFlat.Server.Models.Repositories
             }
         }
 
+       
         public override async Task<bool> Delete(int id)
         {
             try

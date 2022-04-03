@@ -1,4 +1,5 @@
-﻿using GeoFlat.Server.Models.Database.Entities;
+﻿using GeoFlat.Server.Helpers;
+using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Database.Entities.Contexts;
 using GeoFlat.Server.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,9 @@ namespace GeoFlat.Server.Models.Repositories
         {
             try
             {
-                return await dbSet.ToListAsync();
+                return await dbSet.Include(acc => acc.Account)
+                    .Where(acc => acc.Account.Role != RoleHealper.ADMIN)
+                                              .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -27,19 +30,34 @@ namespace GeoFlat.Server.Models.Repositories
             }
         }
 
+        public override async Task<User> GetById(int id)
+        {
+            try
+            {
+                return await dbSet.Include(acc => acc.Account)
+                                  .Where(user => user.Id == id)
+                                  .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} GetById function error", typeof(UserRepository));
+                return null;
+            }
+        }
+
         public override async Task<bool> Update(User entity)
         {
             try
             {
-                var existingUser = await dbSet.Where(x => x.Id == entity.Id)
-                                                    .FirstOrDefaultAsync();
-
-                if (existingUser == null)
-                    return await Add(entity);
+                var existingUser = await dbSet.Include(acc => acc.Account)
+                                                .Where(x => x.Id == entity.Id)
+                                                .FirstOrDefaultAsync();
 
                 existingUser.Name = entity.Name;
-                existingUser.PhoneNumber = entity.PhoneNumber;
                 existingUser.Surname = entity.Surname;
+                existingUser.PhoneNumber = entity.PhoneNumber;
+                existingUser.Account.Password =HashingMD5.GetHashStringMD5(entity.Account.Password);
+                existingUser.Account.Email = entity.Account.Email;
 
                 return true;
             }
@@ -54,10 +72,14 @@ namespace GeoFlat.Server.Models.Repositories
         {
             try
             {
-                var exist = await dbSet.Where(x => x.Id == id)
-                                        .FirstOrDefaultAsync();
+                var exist = await dbSet.Include(acc => acc.Account)
+                                                .Where(x => x.Id == id)
+                                                .FirstOrDefaultAsync();
 
-                if (exist == null) return false;
+                if (exist is null)
+                {
+                    return false;
+                }
 
                 dbSet.Remove(exist);
 
