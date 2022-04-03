@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeoFlat.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220402120654_UpdateProperty")]
-    partial class UpdateProperty
+    [Migration("20220403133345_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,16 +41,13 @@ namespace GeoFlat.Server.Migrations
                         .HasColumnType("nvarchar(250)")
                         .HasColumnName("password");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("int")
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("role");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId")
-                        .IsUnique();
 
                     b.HasIndex(new[] { "Email" }, "Email_Index")
                         .IsUnique();
@@ -62,8 +59,8 @@ namespace GeoFlat.Server.Migrations
                         {
                             Id = 1,
                             Email = "geoflatbel@gmail.com",
-                            Password = "Password1",
-                            RoleId = 1
+                            Password = "ec2e92ff70bf4691ae0c68e02fdc6c22",
+                            Role = "administrator"
                         });
                 });
 
@@ -288,49 +285,6 @@ namespace GeoFlat.Server.Migrations
                     b.ToTable("Record");
                 });
 
-            modelBuilder.Entity("GeoFlat.Server.Models.Database.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccessLevel")
-                        .HasColumnType("int")
-                        .HasColumnName("access_level");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Role");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessLevel = 0,
-                            Name = "administrator"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccessLevel = 1,
-                            Name = "moderator"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessLevel = 2,
-                            Name = "client"
-                        });
-                });
-
             modelBuilder.Entity("GeoFlat.Server.Models.Database.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -376,16 +330,6 @@ namespace GeoFlat.Server.Migrations
                             PhoneNumber = "+375291110011",
                             Surname = "admin"
                         });
-                });
-
-            modelBuilder.Entity("GeoFlat.Server.Models.Database.Entities.Account", b =>
-                {
-                    b.HasOne("GeoFlat.Server.Models.Database.Entities.Role", "Role")
-                        .WithOne("Account")
-                        .HasForeignKey("GeoFlat.Server.Models.Database.Entities.Account", "RoleId")
-                        .IsRequired();
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("GeoFlat.Server.Models.Database.Entities.Comparison", b =>
@@ -494,12 +438,6 @@ namespace GeoFlat.Server.Migrations
                     b.Navigation("Comparisons");
 
                     b.Navigation("Favorites");
-                });
-
-            modelBuilder.Entity("GeoFlat.Server.Models.Database.Entities.Role", b =>
-                {
-                    b.Navigation("Account")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("GeoFlat.Server.Models.Database.Entities.User", b =>

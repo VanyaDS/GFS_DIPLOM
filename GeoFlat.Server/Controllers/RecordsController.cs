@@ -3,9 +3,12 @@ using GeoFlat.Server.Automapper.RequestModels;
 using GeoFlat.Server.Automapper.ResponseModels;
 using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Controllers
@@ -14,13 +17,11 @@ namespace GeoFlat.Server.Controllers
     [ApiController]
     public class RecordsController : ControllerBase
     {
+        private int _UserId => int.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
         private readonly ILogger<RecordsController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        //private int +UserId => int.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
-        private int _UserId = 1;
-
         public RecordsController(
             ILogger<RecordsController> logger,
             IUnitOfWork unitOfWork,
@@ -60,6 +61,7 @@ namespace GeoFlat.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateRecord(RecordRequest recordRequest)
         {
             if (recordRequest == null)
@@ -74,7 +76,7 @@ namespace GeoFlat.Server.Controllers
                 var record = _mapper.Map<Record>(recordRequest);
 
                 record.PublicationDate = System.DateTime.Now;
-                record.UserId = _UserId;// change to current user id
+                record.UserId = _UserId;
                 flat.Geolocation = geolocation;
                 record.Flat = flat;
 

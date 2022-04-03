@@ -38,9 +38,9 @@ namespace GeoFlat.Server.Models.Repositories
                     return await Add(entity);
 
                 existingAccount.Email = entity.Email;
-                existingAccount.RoleId = entity.RoleId;
+                existingAccount.Role = entity.Role;
                 existingAccount.Password = entity.Password;
-                existingAccount.RoleId = entity.RoleId;
+
 
                 return true;
             }

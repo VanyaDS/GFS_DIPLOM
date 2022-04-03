@@ -13,7 +13,6 @@ namespace GeoFlat.Server.Models.Interfaces
         IGeolocationRepository Geolocations { get; }
         IMessageRepository Messages { get; }
         IRecordRepository Records { get; }
-        IRoleRepository Roles { get; }
         Task CompleteAsync();
     }
 }

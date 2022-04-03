@@ -8,6 +8,21 @@ namespace GeoFlat.Server.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Account",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    password = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Account", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Geolocation",
                 columns: table => new
                 {
@@ -20,63 +35,6 @@ namespace GeoFlat.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Geolocation", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Role",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    access_level = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Role", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Flat",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    room_number = table.Column<int>(type: "int", nullable: false),
-                    area = table.Column<double>(type: "float", nullable: false),
-                    floor = table.Column<int>(type: "int", nullable: false),
-                    GeolocationId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Flat", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Flat_Geolocation_GeolocationId",
-                        column: x => x.GeolocationId,
-                        principalTable: "Geolocation",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Account",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    password = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    role = table.Column<int>(type: "int", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Account", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Account_Role_role",
-                        column: x => x.role,
-                        principalTable: "Role",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,6 +55,28 @@ namespace GeoFlat.Server.Migrations
                         name: "FK_User_Account_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Account",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Flat",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    room_number = table.Column<int>(type: "int", nullable: false),
+                    area = table.Column<double>(type: "float", nullable: false),
+                    floor = table.Column<int>(type: "int", nullable: false),
+                    GeolocationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Flat", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Flat_Geolocation_GeolocationId",
+                        column: x => x.GeolocationId,
+                        principalTable: "Geolocation",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -139,7 +119,6 @@ namespace GeoFlat.Server.Migrations
                     publication_date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     record_title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     price = table.Column<int>(type: "int", nullable: false),
-                    room_number = table.Column<int>(type: "int", nullable: false),
                     rent_type = table.Column<bool>(type: "bit", nullable: false),
                     rent_status = table.Column<bool>(type: "bit", nullable: false),
                     has_furniture = table.Column<bool>(type: "bit", nullable: false),
@@ -222,24 +201,9 @@ namespace GeoFlat.Server.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Role",
-                columns: new[] { "id", "access_level", "name" },
-                values: new object[] { 1, 0, "administrator" });
-
-            migrationBuilder.InsertData(
-                table: "Role",
-                columns: new[] { "id", "access_level", "name" },
-                values: new object[] { 2, 1, "moderator" });
-
-            migrationBuilder.InsertData(
-                table: "Role",
-                columns: new[] { "id", "access_level", "name" },
-                values: new object[] { 3, 2, "client" });
-
-            migrationBuilder.InsertData(
                 table: "Account",
                 columns: new[] { "id", "email", "password", "role" },
-                values: new object[] { 1, "geoflatbel@gmail.com", "Password1", 1 });
+                values: new object[] { 1, "geoflatbel@gmail.com", "ec2e92ff70bf4691ae0c68e02fdc6c22", "administrator" });
 
             migrationBuilder.InsertData(
                 table: "User",
@@ -250,12 +214,6 @@ namespace GeoFlat.Server.Migrations
                 name: "Email_Index",
                 table: "Account",
                 column: "email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Account_role",
-                table: "Account",
-                column: "role",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -336,9 +294,6 @@ namespace GeoFlat.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Account");
-
-            migrationBuilder.DropTable(
-                name: "Role");
         }
     }
 }

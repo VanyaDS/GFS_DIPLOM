@@ -28,8 +28,6 @@ namespace GeoFlat.Server.Models
 
         public IRecordRepository Records { get; private set; }
 
-        public IRoleRepository Roles { get; private set; }
-
         public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
             _context = context;
@@ -43,7 +41,6 @@ namespace GeoFlat.Server.Models
             Geolocations = new GeolocationRepository(context, _logger);
             Messages = new MessageRepository(context, _logger);
             Records = new RecordRepository(context, _logger);
-            Roles = new RoleRepository(context, _logger);
         }
 
         public async Task CompleteAsync()

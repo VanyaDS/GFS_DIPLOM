@@ -46,9 +46,13 @@ namespace GeoFlat.Server.Models.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate)
         {
             return await dbSet.Where(predicate).ToListAsync();
+        }
+        public async Task<T> FindSingleOrDefaultAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await dbSet.SingleOrDefaultAsync(predicate);
         }
 
         public virtual Task<bool> Update(T entity)

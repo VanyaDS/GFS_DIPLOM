@@ -51,7 +51,7 @@ namespace GeoFlat.Server.Controllers
 
                 return Ok(filesPath.ToString());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal server error");
             }
