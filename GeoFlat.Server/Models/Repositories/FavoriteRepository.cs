@@ -27,6 +27,22 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Favorite>();
             }
         }
+        public override async Task<Favorite> GetById(int id)
+        {
+            try
+            {
+                return await dbSet.Include(rec => rec.Record)
+                                  .ThenInclude(flat => flat.Flat)
+                                  .ThenInclude(geo => geo.Geolocation)
+                                  .Where(fav => fav.Id == id)
+                                  .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} GetById function error", typeof(RecordRepository));
+                return null;
+            }
+        }
         public override async Task<IEnumerable<Favorite>> FindAllAsync(Expression<Func<Favorite, bool>> predicate)
         {
             return await dbSet.Include( fav => fav.Record)

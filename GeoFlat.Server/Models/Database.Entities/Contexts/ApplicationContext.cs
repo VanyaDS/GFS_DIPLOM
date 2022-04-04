@@ -8,7 +8,8 @@ namespace GeoFlat.Server.Models.Database.Entities.Contexts
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            //   Database.EnsureCreated();   
+            //Database.EnsureDeletedAsync();
+            Database.EnsureCreated();   
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }

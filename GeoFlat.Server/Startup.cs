@@ -32,7 +32,7 @@ namespace GeoFlat.Server
             services.AddControllers();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection), ServiceLifetime.Scoped);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var authOptionesConfiguration = Configuration.GetSection("Authorization");

@@ -66,7 +66,14 @@ namespace GeoFlat.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserRequest UserRequest)
         {
-            if (UserRequest == null)
+            if (UserRequest is null)
+            {
+                return BadRequest();
+            }
+
+            var hasTheSameEmail = await _unitOfWork.Accounts.FindSingleOrDefaultAsync(x => x.Email == UserRequest.Email);
+          
+            if(hasTheSameEmail is not null || UserRequest.Email == "geoflatbel@gmail.com")
             {
                 return BadRequest();
             }

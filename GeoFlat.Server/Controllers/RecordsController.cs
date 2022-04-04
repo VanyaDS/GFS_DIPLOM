@@ -65,7 +65,7 @@ namespace GeoFlat.Server.Controllers
         [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> CreateRecord(RecordRequest recordRequest)
         {
-            if (recordRequest == null)
+            if (recordRequest is null)
             {
                 return BadRequest();
             }
@@ -130,7 +130,7 @@ namespace GeoFlat.Server.Controllers
         {
             var record = await _unitOfWork.Records.GetById(id);
 
-            if (record == null)
+            if (record is null)
             {
                 return NotFound();
             }

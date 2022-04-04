@@ -32,8 +32,15 @@ namespace GeoFlat.Server.Models.Repositories
 
         public virtual async Task<bool> Add(T entity)
         {
-            await dbSet.AddAsync(entity);
-            return true;
+            try
+            {
+                await dbSet.AddAsync(entity);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public virtual Task<bool> Delete(int id)
