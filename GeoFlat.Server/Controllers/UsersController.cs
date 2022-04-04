@@ -119,24 +119,23 @@ namespace GeoFlat.Server.Controllers
             }
             return BadRequest();
         }
-       
-        
-        //[HttpPut("{id}")]
-        //[Route("moderate")]
-        //[Authorize(Roles = RoleHealper.ADMIN)]
-        //public async Task<IActionResult> UpdateRole(int id , User user1)
-        //{
-        //    var user = await _unitOfWork.Users.GetById(id);
 
-        //    if (user is null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    user.Account.Role = RoleHealper.MODER;
-        //    await _unitOfWork.CompleteAsync();
 
-        //    return Ok(_mapper.Map<UserResponse>(user));
-        //}
+        [HttpPut("moderate/{id}")]
+        [Authorize(Roles = RoleHealper.ADMIN)]
+        public async Task<IActionResult> UpdateRole(int id)
+        {
+            var user = await _unitOfWork.Users.GetById(id);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+            user.Account.Role = RoleHealper.MODER;
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(_mapper.Map<UserResponse>(user));
+        }
 
 
         [HttpDelete("{id}")]

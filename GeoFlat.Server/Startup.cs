@@ -15,7 +15,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IO;
-using System.Text.Json.Serialization;
 
 namespace GeoFlat.Server
 {
@@ -29,10 +28,10 @@ namespace GeoFlat.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AppMappingProfile));
-            
+
             services.AddControllers();
-       
-            string connection = Configuration.GetConnectionString("DefaultConnection");            
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -66,13 +65,14 @@ namespace GeoFlat.Server
                                .AllowAnyHeader();
                     });
             });
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
-                { 
+                {
                     Title = "GeoFlat.Server",
-                    Version = "v1" });
+                    Version = "v1"
+                });
             });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,7 +90,7 @@ namespace GeoFlat.Server
 
             app.UseAuthentication();
             app.UseAuthorization();
-          
+
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
