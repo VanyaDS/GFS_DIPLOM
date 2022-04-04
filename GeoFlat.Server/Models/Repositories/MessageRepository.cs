@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
@@ -47,7 +48,27 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
+        public override async Task<IEnumerable<Message>> FindAllAsync(Expression<Func<Message, bool>> predicate)
+        {
+            return await dbSet.Include(res => res.UserRecipient)
+                              .ThenInclude(acc => acc.Account)                           
+                              .Where(predicate).ToListAsync();
+        }
+        public override async Task<Message> GetById(int id)
+        {
+            try
+            {
+                return await dbSet.Include(res => res.UserRecipient)
+                                  .ThenInclude(acc => acc.Account)
+                                  .Where(mes => mes.Id == id)
+                                  .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} GetById function error", typeof(MessageRepository));
+                return null;
+            }
+        }
         public override async Task<bool> Delete(int id)
         {
             try

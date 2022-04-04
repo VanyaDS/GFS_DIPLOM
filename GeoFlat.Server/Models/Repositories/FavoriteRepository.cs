@@ -39,7 +39,7 @@ namespace GeoFlat.Server.Models.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} GetById function error", typeof(RecordRepository));
+                _logger.LogError(ex, "{Repo} GetById function error", typeof(FavoriteRepository));
                 return null;
             }
         }
