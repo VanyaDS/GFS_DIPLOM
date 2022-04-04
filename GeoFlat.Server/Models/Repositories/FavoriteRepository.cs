@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
@@ -25,6 +26,13 @@ namespace GeoFlat.Server.Models.Repositories
                 _logger.LogError(ex, "{Repo} All function error", typeof(FavoriteRepository));
                 return new List<Favorite>();
             }
+        }
+        public override async Task<IEnumerable<Favorite>> FindAllAsync(Expression<Func<Favorite, bool>> predicate)
+        {
+            return await dbSet.Include( fav => fav.Record)
+                              .ThenInclude( rec =>rec.Flat)
+                              .ThenInclude(flat => flat.Geolocation)
+                              .Where(predicate).ToListAsync();
         }
 
         public override async Task<bool> Update(Favorite entity)
