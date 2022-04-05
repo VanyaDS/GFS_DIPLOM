@@ -101,9 +101,11 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber));
 
             CreateMap<Message, MessageResponse>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.RecipientId, opt => opt.MapFrom(src => src.UserRecipient.Id))
+                .ForMember(dest => dest.messageId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.RecipientId, opt => opt.MapFrom(src => src.Recipient))
+                .ForMember(dest => dest.SenderId, opt => opt.MapFrom(src => src.Sender))
                 .ForMember(dest => dest.MessageText, opt => opt.MapFrom(src => src.MessageText))
+                .ForMember(dest => dest.IsRead, opt => opt.MapFrom(src => src.IsRead))
                 .ForMember(dest => dest.SendingDate, opt => opt.MapFrom(src => src.SendingDate))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserRecipient.Name))
                 .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.UserRecipient.Surname))

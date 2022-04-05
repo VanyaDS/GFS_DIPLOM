@@ -5,13 +5,17 @@ namespace GeoFlat.Server.Automapper.ResponseModels
 {
     public class MessageResponse
     {
-        public int Id { get; set; }
+        public int messageId { get; set; }
         public int RecipientId { get; set; }
+        public int SenderId { get; set; }
 
         [DataType(DataType.MultilineText)]
         [Required]
         public string MessageText { get; set; }
-        
+      
+        [Required]
+        public bool IsRead { get; set; }
+
         [Required]
         public DateTime SendingDate { get; set; }
         

@@ -35,10 +35,7 @@ namespace GeoFlat.Server.Models.Repositories
                 var existingMessage = await dbSet.Where(x => x.Id == entity.Id)
                                                     .FirstOrDefaultAsync();
 
-                if (existingMessage == null)
-                    return await Add(entity);
-
-                existingMessage.MessageText = entity.MessageText;
+                existingMessage.IsRead = entity.IsRead;
 
                 return true;
             }
@@ -51,7 +48,9 @@ namespace GeoFlat.Server.Models.Repositories
         public override async Task<IEnumerable<Message>> FindAllAsync(Expression<Func<Message, bool>> predicate)
         {
             return await dbSet.Include(res => res.UserRecipient)
-                              .ThenInclude(acc => acc.Account)                           
+                              .ThenInclude(acc => acc.Account)
+                              .Include(send => send.UserSender)
+                              .ThenInclude(acc => acc.Account)                       
                               .Where(predicate).ToListAsync();
         }
         public override async Task<Message> GetById(int id)
@@ -69,6 +68,7 @@ namespace GeoFlat.Server.Models.Repositories
                 return null;
             }
         }
+
         public override async Task<bool> Delete(int id)
         {
             try

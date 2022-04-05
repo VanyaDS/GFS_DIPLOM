@@ -23,6 +23,10 @@ namespace GeoFlat.Server.Models.Database.Entities
         [Column("sending_date")]
         [Required]
         public DateTime SendingDate { get; set; }
+       
+        [Column("is_read")]
+        [Required]
+        public bool IsRead { get; set; }
 
         [Column("sender")]
         public int? Sender { get; set; }
