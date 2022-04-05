@@ -19,7 +19,11 @@ namespace GeoFlat.Server.Models.Database.Entities
         [DataType(DataType.MultilineText)]
         [Required]
         public string MessageText { get; set; }
-       
+
+        [Column("sending_date")]
+        [Required]
+        public DateTime SendingDate { get; set; }
+
         [Column("sender")]
         public int? Sender { get; set; }
       

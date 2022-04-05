@@ -47,6 +47,22 @@ namespace GeoFlat.Server.Controllers
             }
             return Ok(recordsResponse);
         }
+        
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserRecords()
+        {
+            var records = await _unitOfWork.Records.FindAllAsync(rec => rec.UserId == _UserId);
+            List<RecordResponse> recordsResponse = new List<RecordResponse>();
+            if (records is not null)
+            {
+                foreach (var record in records)
+                {
+                    recordsResponse.Add(_mapper.Map<RecordResponse>(record));
+                }
+            }
+            return Ok(recordsResponse);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecord(int id)

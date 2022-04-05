@@ -104,6 +104,7 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.RecipientId, opt => opt.MapFrom(src => src.UserRecipient.Id))
                 .ForMember(dest => dest.MessageText, opt => opt.MapFrom(src => src.MessageText))
+                .ForMember(dest => dest.SendingDate, opt => opt.MapFrom(src => src.SendingDate))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserRecipient.Name))
                 .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.UserRecipient.Surname))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.UserRecipient.PhoneNumber))

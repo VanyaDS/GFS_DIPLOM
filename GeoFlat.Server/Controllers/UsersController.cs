@@ -62,6 +62,20 @@ namespace GeoFlat.Server.Controllers
 
             return Ok(_mapper.Map<UserResponse>(user));
         }
+        
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var user = await _unitOfWork.Users.GetById(_UserId);
+
+            if (user is null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(_mapper.Map<UserResponse>(user));
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserRequest UserRequest)
@@ -97,7 +111,7 @@ namespace GeoFlat.Server.Controllers
 
         [HttpPut]// update of CURRENT user
         [Authorize]
-        public async Task<IActionResult> UpdateUser(UserRequest UserRequest)
+        public async Task<IActionResult> UpdateCurrentUser(UserRequest UserRequest)
         {
             if (UserRequest is null)
             {
