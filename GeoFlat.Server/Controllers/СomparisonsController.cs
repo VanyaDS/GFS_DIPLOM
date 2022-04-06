@@ -14,15 +14,15 @@ namespace GeoFlat.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FavoritesController : ControllerBase
+    public class ComparisonsController : ControllerBase
     {
         private int _UserId => int.Parse(User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
-        private readonly ILogger<FavoritesController> _logger;
+        private readonly ILogger<ComparisonsController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public FavoritesController(
-            ILogger<FavoritesController> logger,
+        public ComparisonsController(
+            ILogger<ComparisonsController> logger,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
@@ -33,37 +33,37 @@ namespace GeoFlat.Server.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetFavorites()
+        public async Task<IActionResult> GetComparisons()
         {
-            var favorites = await _unitOfWork.Favorites.FindAllAsync(favorite => favorite.UserId == _UserId && favorite.RecordId != null);
-            List<FavoriteResponse> favoritesResponse = new List<FavoriteResponse>();
-            if (favorites is not null)
+            var comparisons = await _unitOfWork.Comparisons.FindAllAsync(comparison => comparison.UserId == _UserId && comparison.RecordId != null);
+            List<ComparisonResponse> comparisonsResponse = new List<ComparisonResponse>();
+            if (comparisons is not null)
             {
-                foreach (var favorite in favorites)
+                foreach (var comparison in comparisons)
                 {
-                    favoritesResponse.Add(_mapper.Map<FavoriteResponse>(favorite));
+                    comparisonsResponse.Add(_mapper.Map<ComparisonResponse>(comparison));
                 }
             }
-            return Ok(favoritesResponse);
+            return Ok(comparisonsResponse);
         }
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> Get(int id)
         {
-            var favorite = await _unitOfWork.Favorites.GetById(id);
+            var comparison = await _unitOfWork.Comparisons.GetById(id);
 
-            if (favorite is null)
+            if (comparison is null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<FavoriteResponse>(favorite));
+            return Ok(_mapper.Map<ComparisonResponse>(comparison));
         }
 
         [HttpPost("{recordId}")]
         [Authorize]
-        public async Task<IActionResult> CreateFavorite(int recordId)
+        public async Task<IActionResult> CreateComparison(int recordId)
         {
             var record = await _unitOfWork.Records.GetById(recordId);
             if (record is null)
@@ -71,32 +71,32 @@ namespace GeoFlat.Server.Controllers
                 return BadRequest();
             }
 
-            Favorite favorite = new Favorite
+            Comparison comparison = new Comparison
             {
                 UserId = _UserId,
                 RecordId = recordId
             };
 
-            if (await _unitOfWork.Favorites.Add(favorite))
+            if (await _unitOfWork.Comparisons.Add(comparison))
             {
                 await _unitOfWork.CompleteAsync();
-                return Ok(_mapper.Map<FavoriteResponse>(favorite));
+                return Ok(_mapper.Map<ComparisonResponse>(comparison));
             }
             return BadRequest();
         }
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteFavorite(int id)
+        public async Task<IActionResult> DeleteComparison(int id)
         {
-            var favorite = await _unitOfWork.Favorites.GetById(id);
+            var comparison = await _unitOfWork.Comparisons.GetById(id);
 
-            if (favorite is null)
+            if (comparison is null)
             {
                 return NotFound();
             }
 
-            if (await _unitOfWork.Favorites.Delete(id))
+            if (await _unitOfWork.Comparisons.Delete(id))
             {
                 await _unitOfWork.CompleteAsync();
                 return NoContent();
@@ -106,15 +106,15 @@ namespace GeoFlat.Server.Controllers
 
         [HttpDelete]
         [Authorize]
-        public async Task<IActionResult> DeleteFavorites()
+        public async Task<IActionResult> DeleteComparisons()
         {
-            var favorites = await _unitOfWork.Favorites.FindAllAsync(favorite => favorite.UserId == _UserId);
+            var comparisons = await _unitOfWork.Comparisons.FindAllAsync(comparison => comparison.UserId == _UserId);
 
-            if (favorites is not null)
+            if (comparisons is not null)
             {
-                foreach (var favorite in favorites)
+                foreach (var comparison in comparisons)
                 {
-                    if (await _unitOfWork.Favorites.Delete(favorite.Id))
+                    if (await _unitOfWork.Comparisons.Delete(comparison.Id))
                     {
                         await _unitOfWork.CompleteAsync();
                     }

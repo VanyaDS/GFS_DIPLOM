@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace GeoFlat.Server.Models.Repositories
@@ -26,7 +27,29 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Comparison>();
             }
         }
-
+        public override async Task<IEnumerable<Comparison>> FindAllAsync(Expression<Func<Comparison, bool>> predicate)
+        {
+            return await dbSet.Include(fav => fav.Record)
+                              .ThenInclude(rec => rec.Flat)
+                              .ThenInclude(flat => flat.Geolocation)
+                              .Where(predicate).ToListAsync();
+        }
+        public override async Task<Comparison> GetById(int id)
+        {
+            try
+            {
+                return await dbSet.Include(rec => rec.Record)
+                                  .ThenInclude(flat => flat.Flat)
+                                  .ThenInclude(geo => geo.Geolocation)
+                                  .Where(fav => fav.Id == id && fav.RecordId != null)
+                                  .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} GetById function error", typeof(ComparisonRepository));
+                return null;
+            }
+        }
         public override async Task<bool> Update(Comparison entity)
         {
             try
