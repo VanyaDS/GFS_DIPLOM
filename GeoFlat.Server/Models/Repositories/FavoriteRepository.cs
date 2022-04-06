@@ -34,7 +34,7 @@ namespace GeoFlat.Server.Models.Repositories
                 return await dbSet.Include(rec => rec.Record)
                                   .ThenInclude(flat => flat.Flat)
                                   .ThenInclude(geo => geo.Geolocation)
-                                  .Where(fav => fav.Id == id)
+                                  .Where(fav => fav.Id == id && fav.RecordId != null)
                                   .FirstOrDefaultAsync();
             }
             catch (Exception ex)
