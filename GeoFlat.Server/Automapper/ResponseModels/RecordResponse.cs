@@ -7,7 +7,7 @@ namespace GeoFlat.Server.Automapper.ResponseModels
     {
         [Required]
         public int Id { get; set; }
-        
+
         [Required]
         public int UserId { get; set; }
 
@@ -73,7 +73,7 @@ namespace GeoFlat.Server.Automapper.ResponseModels
         [MaxLength(20)]
         [Required]
         public string HouseNumber { get; set; }
-       
+
         [Required]
         public DateTime PublicationDate { get; set; }
     }

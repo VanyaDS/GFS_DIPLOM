@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace GeoFlat.Server.Models.Database.Entities
 {
@@ -23,14 +20,14 @@ namespace GeoFlat.Server.Models.Database.Entities
         [Column("sending_date")]
         [Required]
         public DateTime SendingDate { get; set; }
-       
+
         [Column("is_read")]
         [Required]
         public bool IsRead { get; set; }
 
         [Column("sender")]
         public int? Sender { get; set; }
-      
+
         [Column("recipient")]
         public int? Recipient { get; set; }
         public User UserSender { get; set; }

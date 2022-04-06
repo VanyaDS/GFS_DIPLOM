@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace GeoFlat.Server.Models.Database.Entities
@@ -22,7 +20,7 @@ namespace GeoFlat.Server.Models.Database.Entities
         [MaxLength(100)]
         [Required]
         public string StreetName { get; set; }
-       
+
         [Column("house_number")]
         [MaxLength(20)]
         [Required]

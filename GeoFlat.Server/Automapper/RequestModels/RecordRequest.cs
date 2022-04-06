@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace GeoFlat.Server.Automapper.RequestModels
 {
@@ -22,7 +21,7 @@ namespace GeoFlat.Server.Automapper.RequestModels
 
         [Required]
         public int RoomNumber { get; set; }
-       
+
         [Required]
         public bool RentType { get; set; }
 

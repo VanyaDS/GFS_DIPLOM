@@ -14,7 +14,6 @@ namespace GeoFlat.Server.Models.Repositories
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
         public UserRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
-
         public override async Task<IEnumerable<User>> All()
         {
             try
@@ -29,7 +28,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<User>();
             }
         }
-
         public override async Task<User> GetById(int id)
         {
             try
@@ -44,7 +42,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return null;
             }
         }
-
         public override async Task<bool> Update(User entity)
         {
             try
@@ -67,7 +64,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
         public override async Task<bool> Delete(int id)
         {
             try

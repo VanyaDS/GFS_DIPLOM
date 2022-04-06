@@ -15,7 +15,7 @@ namespace GeoFlat.Server.Automapper.RequestModels
         [MaxLength(50)]
         [Required]
         public string PhoneNumber { get; set; }
-       
+
         [MaxLength(100)]
         [EmailAddress]
         [Required]

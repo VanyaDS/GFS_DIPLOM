@@ -13,7 +13,6 @@ namespace GeoFlat.Server.Models.Repositories
     public class GeolocationRepository : GenericRepository<Geolocation>, IGeolocationRepository
     {
         public GeolocationRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
-
         public override async Task<IEnumerable<Geolocation>> All()
         {
             try
@@ -26,7 +25,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Geolocation>();
             }
         }
-
         public override async Task<bool> Update(Geolocation entity)
         {
             try
@@ -49,7 +47,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
         public override async Task<bool> Delete(int id)
         {
             try

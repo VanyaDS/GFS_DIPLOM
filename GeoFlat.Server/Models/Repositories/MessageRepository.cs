@@ -14,7 +14,6 @@ namespace GeoFlat.Server.Models.Repositories
     public class MessageRepository : GenericRepository<Message>, IMessageRepository
     {
         public MessageRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
-
         public override async Task<IEnumerable<Message>> All()
         {
             try
@@ -27,7 +26,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Message>();
             }
         }
-
         public override async Task<bool> Update(Message entity)
         {
             try
@@ -70,7 +68,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return null;
             }
         }
-
         public override async Task<bool> Delete(int id)
         {
             try

@@ -48,9 +48,8 @@ namespace GeoFlat.Server.Models.Repositories
             {
                 _logger.LogError(ex, "{Repo} GetById function error", typeof(RecordRepository));
                 return null;
-            }          
+            }
         }
-
         public override async Task<bool> Update(Record entity)
         {
             try
@@ -78,7 +77,7 @@ namespace GeoFlat.Server.Models.Repositories
                 existingRecord.Flat.Floor = entity.Flat.Floor;
                 existingRecord.Flat.Geolocation.StreetName = entity.Flat.Geolocation.StreetName;
                 existingRecord.Flat.Geolocation.CityName = entity.Flat.Geolocation.CityName;
-                existingRecord.Flat.Geolocation.HouseNumber = entity.Flat.Geolocation.HouseNumber;            
+                existingRecord.Flat.Geolocation.HouseNumber = entity.Flat.Geolocation.HouseNumber;
 
                 return true;
             }
@@ -88,8 +87,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
-       
         public override async Task<bool> Delete(int id)
         {
             try

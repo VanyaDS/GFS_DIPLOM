@@ -49,6 +49,5 @@ namespace GeoFlat.Server.Automapper.ResponseModels
         [MaxLength(100)]
         [Required]
         public string RecipientEmail { get; set; }
-
     }
 }

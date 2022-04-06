@@ -49,7 +49,7 @@ namespace GeoFlat.Server.Controllers
         }
         
         [HttpGet("me")]
-        [Authorize]
+        [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> GetCurrentUserRecords()
         {
             var records = await _unitOfWork.Records.FindAllAsync(rec => rec.UserId == _UserId);
@@ -108,14 +108,14 @@ namespace GeoFlat.Server.Controllers
 
         [HttpPut("{id}")]// TODO implement update of CURRENT user
         [Authorize(Roles = RoleHealper.CLIENT)]
-        public async Task<IActionResult> UpdateRecord(int id, RecordRequest recordRequest)
+        public async Task<IActionResult> UpdateRecord(int recordId, RecordRequest recordRequest)
         {
             if (recordRequest is null)
             {
                 return BadRequest();
             }
 
-            var anyRecord = await _unitOfWork.Records.GetById(id);
+            var anyRecord = await _unitOfWork.Records.GetById(recordId);
 
             if (anyRecord is null)
             {
@@ -128,7 +128,7 @@ namespace GeoFlat.Server.Controllers
                 var record = _mapper.Map<Record>(recordRequest);
                 flat.Geolocation = geolocation;
                 record.Flat = flat;
-                record.Id = id;
+                record.Id = recordId;
 
                 if (await _unitOfWork.Records.Update(record))
                 {

@@ -13,7 +13,6 @@ namespace GeoFlat.Server.Models.Repositories
     public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
         public AccountRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
-
         public override async Task<IEnumerable<Account>> All()
         {
             try
@@ -26,7 +25,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Account>();
             }
         }
-
         public override async Task<bool> Update(Account entity)
         {
             try
@@ -50,7 +48,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
         public override async Task<bool> Delete(int id)
         {
             try

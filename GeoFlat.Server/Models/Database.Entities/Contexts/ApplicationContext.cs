@@ -1,5 +1,4 @@
-﻿
-using GeoFlat.Server.Helpers;
+﻿using GeoFlat.Server.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeoFlat.Server.Models.Database.Entities.Contexts
@@ -9,7 +8,7 @@ namespace GeoFlat.Server.Models.Database.Entities.Contexts
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             //Database.EnsureDeletedAsync();
-            Database.EnsureCreated();   
+            Database.EnsureCreated();
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }

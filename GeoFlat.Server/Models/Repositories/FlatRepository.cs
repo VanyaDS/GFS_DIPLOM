@@ -26,7 +26,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Flat>();
             }
         }
-
         public override async Task<bool> Update(Flat entity)
         {
             try
@@ -40,7 +39,7 @@ namespace GeoFlat.Server.Models.Repositories
                 existingFlat.RoomNumber = entity.RoomNumber;
                 existingFlat.Area = entity.Area;
                 existingFlat.Floor = entity.Floor;
-                existingFlat.GeolocationId = entity.GeolocationId;             
+                existingFlat.GeolocationId = entity.GeolocationId;
 
                 return true;
             }
@@ -50,7 +49,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
         public override async Task<bool> Delete(int id)
         {
             try

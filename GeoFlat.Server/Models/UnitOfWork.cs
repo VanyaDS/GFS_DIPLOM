@@ -42,10 +42,9 @@ namespace GeoFlat.Server.Models
             Messages = new MessageRepository(context, _logger);
             Records = new RecordRepository(context, _logger);
         }
-
         public async Task CompleteAsync()
-        {         
-                await _context.SaveChangesAsync();    
+        {
+            await _context.SaveChangesAsync();
         }
         public void Dispose()
         {

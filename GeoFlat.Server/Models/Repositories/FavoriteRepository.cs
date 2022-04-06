@@ -14,7 +14,6 @@ namespace GeoFlat.Server.Models.Repositories
     public class FavoriteRepository : GenericRepository<Favorite>, IFavoriteRepository
     {
         public FavoriteRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
-
         public override async Task<IEnumerable<Favorite>> All()
         {
             try
@@ -45,12 +44,11 @@ namespace GeoFlat.Server.Models.Repositories
         }
         public override async Task<IEnumerable<Favorite>> FindAllAsync(Expression<Func<Favorite, bool>> predicate)
         {
-            return await dbSet.Include( fav => fav.Record)
-                              .ThenInclude( rec =>rec.Flat)
+            return await dbSet.Include(fav => fav.Record)
+                              .ThenInclude(rec => rec.Flat)
                               .ThenInclude(flat => flat.Geolocation)
                               .Where(predicate).ToListAsync();
         }
-
         public override async Task<bool> Update(Favorite entity)
         {
             try
@@ -72,7 +70,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
         public override async Task<bool> Delete(int id)
         {
             try

@@ -99,7 +99,7 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber))
                 .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber))
                 .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber));
-           
+
             CreateMap<Comparison, ComparisonResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Record.Id))
@@ -139,13 +139,6 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.RecipientSurname, opt => opt.MapFrom(src => src.UserRecipient.Surname))
                 .ForMember(dest => dest.RecipientPhoneNumber, opt => opt.MapFrom(src => src.UserRecipient.PhoneNumber))
                 .ForMember(dest => dest.RecipientEmail, opt => opt.MapFrom(src => src.UserRecipient.Account.Email));
-
-
-
-
-
-
-
         }
     }
 }

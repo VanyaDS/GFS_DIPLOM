@@ -118,7 +118,7 @@ namespace GeoFlat.Server.Controllers
             {
                 return BadRequest();
             }
-           
+
             if (string.IsNullOrEmpty(messageRequest.Message))
             {
                 return BadRequest();

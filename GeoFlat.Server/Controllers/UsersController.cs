@@ -28,7 +28,7 @@ namespace GeoFlat.Server.Controllers
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-             _logger = logger;
+            _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -62,7 +62,7 @@ namespace GeoFlat.Server.Controllers
 
             return Ok(_mapper.Map<UserResponse>(user));
         }
-        
+
         [HttpGet("me")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUser()
@@ -86,8 +86,8 @@ namespace GeoFlat.Server.Controllers
             }
 
             var hasTheSameEmail = await _unitOfWork.Accounts.FindSingleOrDefaultAsync(x => x.Email == UserRequest.Email);
-          
-            if(hasTheSameEmail is not null || UserRequest.Email == "geoflatbel@gmail.com")
+
+            if (hasTheSameEmail is not null || UserRequest.Email == "geoflatbel@gmail.com")
             {
                 return BadRequest();
             }

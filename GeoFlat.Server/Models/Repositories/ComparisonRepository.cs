@@ -14,7 +14,6 @@ namespace GeoFlat.Server.Models.Repositories
     public class ComparisonRepository : GenericRepository<Comparison>, IComparisonRepository
     {
         public ComparisonRepository(ApplicationDbContext context, ILogger logger) : base(context, logger) { }
-
         public override async Task<IEnumerable<Comparison>> All()
         {
             try
@@ -72,7 +71,6 @@ namespace GeoFlat.Server.Models.Repositories
                 return false;
             }
         }
-
         public override async Task<bool> Delete(int id)
         {
             try
