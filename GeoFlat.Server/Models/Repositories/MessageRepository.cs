@@ -50,7 +50,7 @@ namespace GeoFlat.Server.Models.Repositories
             return await dbSet.Include(res => res.UserRecipient)
                               .ThenInclude(acc => acc.Account)
                               .Include(send => send.UserSender)
-                              .ThenInclude(acc => acc.Account)                       
+                              .ThenInclude(acc => acc.Account)
                               .Where(predicate).ToListAsync();
         }
         public override async Task<Message> GetById(int id)
@@ -58,6 +58,8 @@ namespace GeoFlat.Server.Models.Repositories
             try
             {
                 return await dbSet.Include(res => res.UserRecipient)
+                                  .ThenInclude(acc => acc.Account)
+                                  .Include(send => send.UserSender)
                                   .ThenInclude(acc => acc.Account)
                                   .Where(mes => mes.Id == id)
                                   .FirstOrDefaultAsync();

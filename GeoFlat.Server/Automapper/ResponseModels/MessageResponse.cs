@@ -6,8 +6,6 @@ namespace GeoFlat.Server.Automapper.ResponseModels
     public class MessageResponse
     {
         public int messageId { get; set; }
-        public int RecipientId { get; set; }
-        public int SenderId { get; set; }
 
         [DataType(DataType.MultilineText)]
         [Required]
@@ -18,20 +16,39 @@ namespace GeoFlat.Server.Automapper.ResponseModels
 
         [Required]
         public DateTime SendingDate { get; set; }
-        
+
+
+        public int SenderId { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string SenderName { get; set; }
 
         [MaxLength(50)]
         [Required]
-        public string Surname { get; set; }
+        public string SenderSurname { get; set; }
 
         [MaxLength(50)]
         [Required]
-        public string PhoneNumber { get; set; }
+        public string SenderPhoneNumber { get; set; }
             
         [MaxLength(100)]
         [Required]
-        public string Email { get; set; }
+        public string SenderEmail { get; set; }
+       
+        public int RecipientId { get; set; }
+
+        public string RecipientName { get; set; }
+
+        [MaxLength(50)]
+        [Required]
+        public string RecipientSurname { get; set; }
+
+        [MaxLength(50)]
+        [Required]
+        public string RecipientPhoneNumber { get; set; }
+       
+        [MaxLength(100)]
+        [Required]
+        public string RecipientEmail { get; set; }
+
     }
 }

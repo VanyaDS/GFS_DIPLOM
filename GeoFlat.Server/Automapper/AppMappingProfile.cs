@@ -102,15 +102,23 @@ namespace GeoFlat.Server.Automapper
 
             CreateMap<Message, MessageResponse>()
                 .ForMember(dest => dest.messageId, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.RecipientId, opt => opt.MapFrom(src => src.Recipient))
-                .ForMember(dest => dest.SenderId, opt => opt.MapFrom(src => src.Sender))
                 .ForMember(dest => dest.MessageText, opt => opt.MapFrom(src => src.MessageText))
                 .ForMember(dest => dest.IsRead, opt => opt.MapFrom(src => src.IsRead))
                 .ForMember(dest => dest.SendingDate, opt => opt.MapFrom(src => src.SendingDate))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserRecipient.Name))
-                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.UserRecipient.Surname))
-                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.UserRecipient.PhoneNumber))
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.UserRecipient.Account.Email));
+                .ForMember(dest => dest.SenderId, opt => opt.MapFrom(src => src.Sender))
+                .ForMember(dest => dest.SenderName, opt => opt.MapFrom(src => src.UserSender.Name))
+                .ForMember(dest => dest.SenderSurname, opt => opt.MapFrom(src => src.UserSender.Surname))
+                .ForMember(dest => dest.SenderPhoneNumber, opt => opt.MapFrom(src => src.UserSender.PhoneNumber))
+                .ForMember(dest => dest.SenderEmail, opt => opt.MapFrom(src => src.UserSender.Account.Email))
+                .ForMember(dest => dest.RecipientId, opt => opt.MapFrom(src => src.Recipient))
+                .ForMember(dest => dest.RecipientName, opt => opt.MapFrom(src => src.UserRecipient.Name))
+                .ForMember(dest => dest.RecipientSurname, opt => opt.MapFrom(src => src.UserRecipient.Surname))
+                .ForMember(dest => dest.RecipientPhoneNumber, opt => opt.MapFrom(src => src.UserRecipient.PhoneNumber))
+                .ForMember(dest => dest.RecipientEmail, opt => opt.MapFrom(src => src.UserRecipient.Account.Email));
+
+
+
+
 
 
 

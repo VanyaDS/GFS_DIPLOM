@@ -148,37 +148,6 @@ namespace GeoFlat.Server.Controllers
             return BadRequest();
         }
 
-        //[HttpPut("{messageId}")]
-        //[Authorize]
-        //public async Task<IActionResult> UpdateMessage(int messageId, string message)
-        //{
-        //    if (string.IsNullOrEmpty(message))
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var existingMessage = await _unitOfWork.Messages.GetById(messageId);
-
-        //    if (existingMessage is null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    Message newMessage = new Message
-        //    {
-        //        Id = messageId,
-        //        MessageText = message
-        //    };
-
-        //    if (await _unitOfWork.Messages.Update(newMessage))
-        //    {
-        //        await _unitOfWork.CompleteAsync();
-        //        return NoContent();
-        //    }
-
-
-        //    return BadRequest();
-        //}
-
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteMessage(int id)
