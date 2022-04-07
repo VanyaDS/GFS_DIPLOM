@@ -14,9 +14,10 @@ namespace GeoFlat.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    //.UseSetting("https_port", "5080");
                     //webBuilder.UseKestrel(opts =>
                     //{
-                    //    opts.ListenAnyIP(5050);
+                    //    opts.ListenAnyIP(5079);
                     //});
                 });
     }

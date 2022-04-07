@@ -33,6 +33,7 @@ namespace GeoFlat.Server.Models.Repositories
                               .ThenInclude(flat => flat.Geolocation)
                               .Where(predicate).ToListAsync();
         }
+
         public override async Task<Comparison> GetById(int id)
         {
             try
@@ -47,6 +48,24 @@ namespace GeoFlat.Server.Models.Repositories
             {
                 _logger.LogError(ex, "{Repo} GetById function error", typeof(ComparisonRepository));
                 return null;
+            }
+        }
+
+        public override bool DeleteAll(IEnumerable<Comparison> entities)
+        {
+            try
+            {
+                if (entities is not null && entities.Any())
+                {
+                    dbSet.RemoveRange(entities);
+                    return true;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(ComparisonRepository));
+                return false;
             }
         }
         public override async Task<bool> Update(Comparison entity)

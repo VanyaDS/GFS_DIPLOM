@@ -53,6 +53,12 @@ namespace GeoFlat.Server.Models.Repositories
             throw new NotImplementedException();
         }
 
+        public virtual bool DeleteAll(IEnumerable<T> entities)
+        {
+            dbSet.RemoveRange(entities);
+            return true;
+        }
+
         public virtual async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate)
         {
             return await dbSet.Where(predicate).ToListAsync();

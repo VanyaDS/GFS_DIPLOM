@@ -42,6 +42,23 @@ namespace GeoFlat.Server.Models.Repositories
                 return null;
             }
         }
+        public override bool DeleteAll(IEnumerable<Favorite> entities)
+        {
+            try
+            {
+                if (entities is not null && entities.Any())
+                {
+                    dbSet.RemoveRange(entities);
+                    return true;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(FavoriteRepository));
+                return false;
+            }
+        }
         public override async Task<IEnumerable<Favorite>> FindAllAsync(Expression<Func<Favorite, bool>> predicate)
         {
             return await dbSet.Include(fav => fav.Record)

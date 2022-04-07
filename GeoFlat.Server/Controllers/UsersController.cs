@@ -169,10 +169,30 @@ namespace GeoFlat.Server.Controllers
             {
                 return NotFound();
             }
+            var messagesOfUser = await _unitOfWork.Messages.FindAllAsync(mess => mess.Sender == id || mess.Recipient == id);
+            var favoritesOfUser = await _unitOfWork.Favorites.FindAllAsync(fav=>fav.UserId == id);
+            var comparisonsOfUser = await _unitOfWork.Comparisons.FindAllAsync(comp=>comp.UserId == id);
+            if (messagesOfUser.Any())
+            {
+                _unitOfWork.Messages.DeleteAll(messagesOfUser);
+                await _unitOfWork.CompleteAsync();
+            }
+            if(favoritesOfUser.Any())
+            {
+               _unitOfWork.Favorites.DeleteAll(favoritesOfUser);
+                await _unitOfWork.CompleteAsync();
+            }
+            if(comparisonsOfUser.Any())
+            {
+                _unitOfWork.Comparisons.DeleteAll(comparisonsOfUser);
+                await _unitOfWork.CompleteAsync();
+            }
 
             if (await _unitOfWork.Accounts.Delete(id) /* to delete cascade*/ )
             {
                 await _unitOfWork.CompleteAsync();
+
+                
                 return NoContent();
             }
             return BadRequest();

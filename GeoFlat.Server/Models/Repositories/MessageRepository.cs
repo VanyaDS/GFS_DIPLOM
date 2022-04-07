@@ -26,6 +26,24 @@ namespace GeoFlat.Server.Models.Repositories
                 return new List<Message>();
             }
         }
+ 
+        public override bool DeleteAll(IEnumerable<Message> entities)
+        {
+            try
+            {
+                if (entities is not null && entities.Any())
+                {
+                    dbSet.RemoveRange(entities);
+                    return true;
+                }                             
+                    return true;               
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} Delete function error", typeof(MessageRepository));
+                return false;
+            }
+        }
         public override async Task<bool> Update(Message entity)
         {
             try

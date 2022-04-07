@@ -14,5 +14,6 @@ namespace GeoFlat.Server.Models.Interfaces
         Task<bool> Update(T entity);
         Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate);
         Task<T> FindSingleOrDefaultAsync(Expression<Func<T, bool>> predicate);
+        public bool DeleteAll(IEnumerable<T> entities);
     }
 }

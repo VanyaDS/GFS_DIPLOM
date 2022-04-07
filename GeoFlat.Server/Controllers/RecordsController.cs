@@ -150,6 +150,20 @@ namespace GeoFlat.Server.Controllers
             {
                 return NotFound();
             }
+          
+            var favoritesOfUser = await _unitOfWork.Favorites.FindAllAsync(fav => fav.RecordId == id);
+            var comparisonsOfUser = await _unitOfWork.Comparisons.FindAllAsync(comp => comp.RecordId == id);
+
+            if (favoritesOfUser.Any())
+            {
+                _unitOfWork.Favorites.DeleteAll(favoritesOfUser);
+                await _unitOfWork.CompleteAsync();
+            }
+            if (comparisonsOfUser.Any())
+            {
+                _unitOfWork.Comparisons.DeleteAll(comparisonsOfUser);
+                await _unitOfWork.CompleteAsync();
+            }
 
             if (await _unitOfWork.Geolocations.Delete(id) /* to delete cascade*/ )
             {
