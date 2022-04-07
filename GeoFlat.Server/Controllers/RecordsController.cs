@@ -47,7 +47,7 @@ namespace GeoFlat.Server.Controllers
             }
             return Ok(recordsResponse);
         }
-        
+
         [HttpGet("me")]
         [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> GetCurrentUserRecords()
@@ -64,10 +64,10 @@ namespace GeoFlat.Server.Controllers
             return Ok(recordsResponse);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetRecord(int id)
+        [HttpGet("{recordId}")]
+        public async Task<IActionResult> GetRecord(int recordId)
         {
-            var record = await _unitOfWork.Records.GetById(id);
+            var record = await _unitOfWork.Records.GetById(recordId);
 
             if (record is null)
             {
@@ -106,7 +106,7 @@ namespace GeoFlat.Server.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{id}")]// TODO implement update of CURRENT user
+        [HttpPut("{recordId}")]
         [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> UpdateRecord(int recordId, RecordRequest recordRequest)
         {
@@ -116,6 +116,11 @@ namespace GeoFlat.Server.Controllers
             }
 
             var anyRecord = await _unitOfWork.Records.GetById(recordId);
+
+            if (anyRecord.UserId != _UserId)
+            {
+                return BadRequest();
+            }
 
             if (anyRecord is null)
             {
@@ -140,19 +145,19 @@ namespace GeoFlat.Server.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{recordId}")]
         [Authorize(Roles = RoleHealper.ADMIN + "," + RoleHealper.MODER)]
-        public async Task<IActionResult> DeleteRecord(int id)
+        public async Task<IActionResult> DeleteRecord(int recordId)
         {
-            var record = await _unitOfWork.Records.GetById(id);
+            var record = await _unitOfWork.Records.GetById(recordId);
 
             if (record is null)
             {
                 return NotFound();
             }
-          
-            var favoritesOfUser = await _unitOfWork.Favorites.FindAllAsync(fav => fav.RecordId == id);
-            var comparisonsOfUser = await _unitOfWork.Comparisons.FindAllAsync(comp => comp.RecordId == id);
+
+            var favoritesOfUser = await _unitOfWork.Favorites.FindAllAsync(fav => fav.RecordId == recordId);
+            var comparisonsOfUser = await _unitOfWork.Comparisons.FindAllAsync(comp => comp.RecordId == recordId);
 
             if (favoritesOfUser.Any())
             {
@@ -165,7 +170,7 @@ namespace GeoFlat.Server.Controllers
                 await _unitOfWork.CompleteAsync();
             }
 
-            if (await _unitOfWork.Geolocations.Delete(id) /* to delete cascade*/ )
+            if (await _unitOfWork.Geolocations.Delete(recordId) /* to delete cascade*/ )
             {
                 await _unitOfWork.CompleteAsync();
                 return NoContent();

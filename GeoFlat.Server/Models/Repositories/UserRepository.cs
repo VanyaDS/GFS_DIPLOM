@@ -49,12 +49,24 @@ namespace GeoFlat.Server.Models.Repositories
                 var existingUser = await dbSet.Include(acc => acc.Account)
                                                 .Where(x => x.Id == entity.Id)
                                                 .FirstOrDefaultAsync();
+               
+                if (!string.IsNullOrEmpty(entity.Name))
+                {
+                    existingUser.Name = entity.Name;
+                }
 
-                existingUser.Name = entity.Name;
-                existingUser.Surname = entity.Surname;
-                existingUser.PhoneNumber = entity.PhoneNumber;
-                existingUser.Account.Password =HashingMD5.GetHashStringMD5(entity.Account.Password);
-                existingUser.Account.Email = entity.Account.Email;
+                if (!string.IsNullOrEmpty(entity.Surname))
+                {
+                    existingUser.Surname = entity.Surname;
+                }
+                if (!string.IsNullOrEmpty(entity.PhoneNumber))
+                {
+                    existingUser.PhoneNumber = entity.PhoneNumber;
+                }
+                if (!string.IsNullOrEmpty(entity.Account.Email))
+                {
+                    existingUser.Account.Email = entity.Account.Email;
+                }              
 
                 return true;
             }

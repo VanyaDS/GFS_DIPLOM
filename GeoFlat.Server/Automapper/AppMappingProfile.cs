@@ -55,8 +55,8 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Flat.RoomNumber))
                 .ForMember(dest => dest.Floor, opt => opt.MapFrom(src => src.Flat.Floor))
                 .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Flat.Geolocation.HouseNumber))
-                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Flat.Geolocation.HouseNumber))
-                .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Flat.Geolocation.HouseNumber));
+                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Flat.Geolocation.CityName))
+                .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Flat.Geolocation.StreetName));
 
             CreateMap<User, UserResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -74,6 +74,14 @@ namespace GeoFlat.Server.Automapper
             CreateMap<UserRequest, Account>()
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
+
+            CreateMap<UserRequestUpdate, User>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
+
+            CreateMap<UserRequestUpdate, Account>()
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
 
 
             CreateMap<Favorite, FavoriteResponse>()
@@ -97,8 +105,8 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Record.Flat.RoomNumber))
                 .ForMember(dest => dest.Floor, opt => opt.MapFrom(src => src.Record.Flat.Floor))
                 .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber))
-                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber))
-                .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber));
+                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.CityName))
+                .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.StreetName));
 
             CreateMap<Comparison, ComparisonResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -121,8 +129,8 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.Record.Flat.RoomNumber))
                 .ForMember(dest => dest.Floor, opt => opt.MapFrom(src => src.Record.Flat.Floor))
                 .ForMember(dest => dest.HouseNumber, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber))
-                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber))
-                .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.HouseNumber));
+                .ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.CityName))
+                .ForMember(dest => dest.StreetName, opt => opt.MapFrom(src => src.Record.Flat.Geolocation.StreetName));
 
             CreateMap<Message, MessageResponse>()
                 .ForMember(dest => dest.messageId, opt => opt.MapFrom(src => src.Id))

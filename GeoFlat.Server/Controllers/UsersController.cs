@@ -111,7 +111,7 @@ namespace GeoFlat.Server.Controllers
 
         [HttpPut]// update of CURRENT user
         [Authorize]
-        public async Task<IActionResult> UpdateCurrentUser(UserRequest UserRequest)
+        public async Task<IActionResult> UpdateCurrentUser(UserRequestUpdate UserRequest)
         {
             if (UserRequest is null)
             {
