@@ -143,7 +143,19 @@ namespace GeoFlat.Server.Controllers
             if (await _unitOfWork.Messages.Add(newMessage))
             {
                 await _unitOfWork.CompleteAsync();
-                return Ok(_mapper.Map<MessageResponse>(newMessage));
+                
+                var sender = await _unitOfWork.Users.GetById(_UserId);
+                var result = _mapper.Map<MessageResponse>(newMessage);
+
+                if (sender is not null)
+                {
+                    result.SenderName = sender.Name;
+                    result.SenderSurname = sender.Surname;
+                    result.SenderPhoneNumber = sender.PhoneNumber;
+                    result.SenderEmail = sender.Account.Email;
+                }
+               
+                return Ok(result);
             }
             return BadRequest();
         }

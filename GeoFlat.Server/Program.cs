@@ -15,10 +15,10 @@ namespace GeoFlat.Server
                 {
                     webBuilder.UseStartup<Startup>();
                     //.UseSetting("https_port", "5080");
-                    //webBuilder.UseKestrel(opts =>
-                    //{
-                    //    opts.ListenAnyIP(5079);
-                    //});
+                    webBuilder.UseKestrel(opts =>
+                    {
+                        opts.ListenAnyIP(5079);
+                    });
                 });
     }
 }

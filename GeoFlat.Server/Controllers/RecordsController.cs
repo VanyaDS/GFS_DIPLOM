@@ -144,7 +144,36 @@ namespace GeoFlat.Server.Controllers
             }
             return BadRequest();
         }
+     
+        [HttpPut("renewstatus/{recordId}")]
+        [Authorize(Roles = RoleHealper.CLIENT)]
+        public async Task<IActionResult> UpdateRecord(int recordId)
+        {
 
+            var anyRecord = await _unitOfWork.Records.GetById(recordId);
+
+            if (anyRecord.UserId != _UserId)
+            {
+                return BadRequest();
+            }
+
+            if (anyRecord is null)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+            anyRecord.RentStatus = !anyRecord.RentStatus;
+
+                if (await _unitOfWork.Records.Update(anyRecord))
+                {
+                    await _unitOfWork.CompleteAsync();
+                    return NoContent();
+                }
+
+            }
+            return BadRequest();
+        }
         [HttpDelete("{recordId}")]
         [Authorize(Roles = RoleHealper.ADMIN + "," + RoleHealper.MODER)]
         public async Task<IActionResult> DeleteRecord(int recordId)
