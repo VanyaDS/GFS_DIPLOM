@@ -6,6 +6,7 @@ using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,26 +24,40 @@ namespace GeoFlat.Server.Controllers
         private readonly ILogger<RecordsController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _memoryCache;
         public RecordsController(
             ILogger<RecordsController> logger,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IMemoryCache memoryCache)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetRecords()
         {
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return BadRequest();
+            }
+
             var records = await _unitOfWork.Records.All();
             List<RecordResponse> recordsResponse = new List<RecordResponse>();
+            
             if (records is not null)
             {
                 foreach (var record in records)
                 {
-                    recordsResponse.Add(_mapper.Map<RecordResponse>(record));
+                    recordsResponse.Add(_mapper.Map<RecordResponse>(record));                   
+                }
+
+                foreach (var record in recordsResponse)
+                {
+                    record.PriceBYN = model.ConvertFromUSDToBYN(record.Price);
                 }
             }
             return Ok(recordsResponse);
@@ -52,6 +67,11 @@ namespace GeoFlat.Server.Controllers
         [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> GetCurrentUserRecords()
         {
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return BadRequest();
+            }
+
             var records = await _unitOfWork.Records.FindAllAsync(rec => rec.UserId == _UserId);
             List<RecordResponse> recordsResponse = new List<RecordResponse>();
             if (records is not null)
@@ -60,6 +80,10 @@ namespace GeoFlat.Server.Controllers
                 {
                     recordsResponse.Add(_mapper.Map<RecordResponse>(record));
                 }
+                foreach (var record in recordsResponse)
+                {
+                    record.PriceBYN = model.ConvertFromUSDToBYN(record.Price);
+                }
             }
             return Ok(recordsResponse);
         }
@@ -67,6 +91,10 @@ namespace GeoFlat.Server.Controllers
         [HttpGet("{recordId}")]
         public async Task<IActionResult> GetRecord(int recordId)
         {
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return BadRequest();
+            }
             var record = await _unitOfWork.Records.GetById(recordId);
 
             if (record is null)

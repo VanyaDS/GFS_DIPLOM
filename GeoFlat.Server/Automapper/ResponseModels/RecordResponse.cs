@@ -25,6 +25,8 @@ namespace GeoFlat.Server.Automapper.ResponseModels
 
         [Required]
         public int Price { get; set; }
+        [Required]
+        public int PriceBYN { get; set; }
 
         [Required]
         public int RoomNumber { get; set; }

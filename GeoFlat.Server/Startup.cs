@@ -3,6 +3,7 @@ using GeoFlat.Server.Models;
 using GeoFlat.Server.Models.Authorization;
 using GeoFlat.Server.Models.Database.Entities.Contexts;
 using GeoFlat.Server.Models.Interfaces;
+using GeoFlat.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +29,9 @@ namespace GeoFlat.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AppMappingProfile));
+
+            services.AddHostedService<CurrencyService>();
+            services.AddMemoryCache();
 
             services.AddControllers();
 
@@ -84,7 +88,7 @@ namespace GeoFlat.Server
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GeoFlat.Server v1"));
             }
 
-          //  app.UseHttpsRedirection();
+            //  app.UseHttpsRedirection();
 
             app.UseRouting();
 
