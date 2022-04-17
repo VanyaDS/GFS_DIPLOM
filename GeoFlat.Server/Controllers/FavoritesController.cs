@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using GeoFlat.Server.Automapper.ResponseModels;
+using GeoFlat.Server.Helpers;
 using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,20 +23,28 @@ namespace GeoFlat.Server.Controllers
         private readonly ILogger<FavoritesController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _memoryCache;
         public FavoritesController(
             ILogger<FavoritesController> logger,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IMemoryCache memoryCache)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetFavorites()
         {
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return StatusCode(500, "Internal server error with currency service");
+            }
+
             var favorites = await _unitOfWork.Favorites.FindAllAsync(favorite => favorite.UserId == _UserId && favorite.RecordId != null);
             List<FavoriteResponse> favoritesResponse = new List<FavoriteResponse>();
             if (favorites is not null)
@@ -42,6 +52,11 @@ namespace GeoFlat.Server.Controllers
                 foreach (var favorite in favorites)
                 {
                     favoritesResponse.Add(_mapper.Map<FavoriteResponse>(favorite));
+                }
+               
+                foreach (var record in favoritesResponse)
+                {
+                    record.PriceBYN = model.ConvertFromUSDToBYN(record.Price);
                 }
             }
             return Ok(favoritesResponse);
@@ -51,14 +66,21 @@ namespace GeoFlat.Server.Controllers
         [Authorize]
         public async Task<IActionResult> Get(int id)
         {
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return StatusCode(500, "Internal server error with currency service");
+            }
+
             var favorite = await _unitOfWork.Favorites.GetById(id);
 
             if (favorite is null)
             {
                 return NotFound();
             }
-
-            return Ok(_mapper.Map<FavoriteResponse>(favorite));
+            var resultRecord = _mapper.Map<FavoriteResponse>(favorite);
+            resultRecord.PriceBYN = model.ConvertFromUSDToBYN(resultRecord.Price);
+           
+            return Ok(resultRecord);
         }
 
         [HttpPost("{recordId}")]

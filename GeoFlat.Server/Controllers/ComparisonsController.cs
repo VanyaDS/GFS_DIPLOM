@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using GeoFlat.Server.Automapper.ResponseModels;
+using GeoFlat.Server.Helpers;
 using GeoFlat.Server.Models.Database.Entities;
 using GeoFlat.Server.Models.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,20 +23,28 @@ namespace GeoFlat.Server.Controllers
         private readonly ILogger<ComparisonsController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _memoryCache;
         public ComparisonsController(
             ILogger<ComparisonsController> logger,
             IUnitOfWork unitOfWork,
-            IMapper mapper)
+            IMapper mapper,
+            IMemoryCache memoryCache)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetComparisons()
         {
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return StatusCode(500, "Internal server error with currency service");
+            }
+
             var comparisons = await _unitOfWork.Comparisons.FindAllAsync(comparison => comparison.UserId == _UserId && comparison.RecordId != null);
             List<ComparisonResponse> comparisonsResponse = new List<ComparisonResponse>();
             if (comparisons is not null)
@@ -42,6 +52,10 @@ namespace GeoFlat.Server.Controllers
                 foreach (var comparison in comparisons)
                 {
                     comparisonsResponse.Add(_mapper.Map<ComparisonResponse>(comparison));
+                }
+                foreach (var record in comparisonsResponse)
+                {
+                    record.PriceBYN = model.ConvertFromUSDToBYN(record.Price);
                 }
             }
             return Ok(comparisonsResponse);
@@ -51,14 +65,22 @@ namespace GeoFlat.Server.Controllers
         [Authorize]
         public async Task<IActionResult> Get(int id)
         {
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return StatusCode(500, "Internal server error with currency service");
+            }
+
             var comparison = await _unitOfWork.Comparisons.GetById(id);
 
             if (comparison is null)
             {
                 return NotFound();
             }
+           
+            var resultRecord = _mapper.Map<ComparisonResponse>(comparison);
+            resultRecord.PriceBYN = model.ConvertFromUSDToBYN(resultRecord.Price);
 
-            return Ok(_mapper.Map<ComparisonResponse>(comparison));
+            return Ok(resultRecord);
         }
 
         [HttpPost("{recordId}")]

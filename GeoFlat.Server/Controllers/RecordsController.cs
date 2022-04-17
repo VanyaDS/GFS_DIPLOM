@@ -42,7 +42,7 @@ namespace GeoFlat.Server.Controllers
         {
             if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
             {
-                return BadRequest();
+                return StatusCode(500, "Internal server error with currency service");
             }
 
             var records = await _unitOfWork.Records.All();
@@ -69,7 +69,7 @@ namespace GeoFlat.Server.Controllers
         {
             if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
             {
-                return BadRequest();
+                return StatusCode(500, "Internal server error with currency service");
             }
 
             var records = await _unitOfWork.Records.FindAllAsync(rec => rec.UserId == _UserId);
@@ -93,7 +93,7 @@ namespace GeoFlat.Server.Controllers
         {
             if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
             {
-                return BadRequest();
+                return StatusCode(500, "Internal server error with currency service");
             }
             var record = await _unitOfWork.Records.GetById(recordId);
 
@@ -102,7 +102,10 @@ namespace GeoFlat.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<RecordResponse>(record));
+            var resultRecord = _mapper.Map<RecordResponse>(record);
+            resultRecord.PriceBYN = model.ConvertFromUSDToBYN(resultRecord.Price);
+
+            return Ok(resultRecord);
         }
 
         [HttpPost]
