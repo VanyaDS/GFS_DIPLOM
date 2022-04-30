@@ -78,6 +78,7 @@ namespace GeoFlat.Server.Models.Repositories
                 existingRecord.Flat.Geolocation.StreetName = entity.Flat.Geolocation.StreetName;
                 existingRecord.Flat.Geolocation.CityName = entity.Flat.Geolocation.CityName;
                 existingRecord.Flat.Geolocation.HouseNumber = entity.Flat.Geolocation.HouseNumber;
+                existingRecord.PublicationDate = DateTime.Now;
 
                 return true;
             }
