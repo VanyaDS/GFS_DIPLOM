@@ -18,11 +18,17 @@ namespace GeoFlat.Server.Helpers
 
             if (filters.MinPrice is not null)
             {
-                filteredRecords = filteredRecords.Where(records => records.Price >= filters.MinPrice);
+                if (filters.MinPrice.Value > 0 && filters.MinPrice.Value < int.MaxValue)
+                {
+                    filteredRecords = filteredRecords.Where(records => records.Price >= filters.MinPrice.Value);
+                }
             }
             if (filters.MaxPrice is not null)
             {
-                filteredRecords = filteredRecords.Where(records => records.Price <= filters.MinPrice);
+                if (filters.MaxPrice.Value > 0 && filters.MaxPrice.Value < int.MaxValue)
+                {
+                    filteredRecords = filteredRecords.Where(records => records.Price <= filters.MinPrice.Value);
+                }
             }
             if (!string.IsNullOrEmpty(filters.CityName))
             {
@@ -75,7 +81,7 @@ namespace GeoFlat.Server.Helpers
            
             if (filters.RoomNumber.HasValue)
             {
-                if (filters.RoomNumber.Value > 0)
+                if (filters.RoomNumber.Value > 0 && filters.RoomNumber.Value <= 100)
                 {
                     filteredRecords = filteredRecords.Where(records => records.Flat.RoomNumber == filters.RoomNumber.Value);
                 }
