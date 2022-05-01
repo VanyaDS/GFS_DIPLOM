@@ -33,7 +33,11 @@ namespace GeoFlat.Server.Automapper.ResponseModels
         [MaxLength(100)]
         [Required]
         public string SenderEmail { get; set; }
-       
+
+        [MaxLength(50)]
+        [Required]
+        public string SenderRole { get; set; }
+
         public int RecipientId { get; set; }
 
         public string RecipientName { get; set; }
@@ -49,5 +53,9 @@ namespace GeoFlat.Server.Automapper.ResponseModels
         [MaxLength(100)]
         [Required]
         public string RecipientEmail { get; set; }
+       
+        [MaxLength(50)]
+        [Required]
+        public string RecipientRole { get; set; }
     }
 }

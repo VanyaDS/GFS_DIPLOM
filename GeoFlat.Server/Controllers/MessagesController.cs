@@ -87,7 +87,7 @@ namespace GeoFlat.Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("{userId}")] // // on the top of result list there are the earliest messages
+        [HttpGet("{userId}")] // on the top of result list there are the earliest messages
         public async Task<IActionResult> GetMessages(int userId)
         {
             var messagesWithUser = await _unitOfWork.Messages.FindAllAsync(mess => mess.Sender == _UserId && mess.Recipient == userId
@@ -99,7 +99,10 @@ namespace GeoFlat.Server.Controllers
                 messagesWithUser.OrderBy(date => date.SendingDate).ToList();
                 foreach (var message in messagesWithUser)
                 {
-                    message.IsRead = true;
+                    if (message.Sender == userId)
+                    {
+                        message.IsRead = true;
+                    }
                     if (await _unitOfWork.Messages.Update(message))
                     {
                         await _unitOfWork.CompleteAsync();
@@ -108,6 +111,29 @@ namespace GeoFlat.Server.Controllers
                 }
             }
             return Ok(messagesResponse);
+        }
+        
+        [Authorize]
+        [HttpGet("unread")] 
+        public async Task<IActionResult> GetInfoAboutUnreadMessages()
+        {
+            var unreadMessagesToCurrentUser = await _unitOfWork.Messages.FindAllAsync(mess => mess.Recipient == _UserId && !mess.IsRead);
+      
+            var infoMessagesResponse = new InfoMessagesResponse();
+          
+            if (unreadMessagesToCurrentUser.Any())
+            {
+                int messageNumber = unreadMessagesToCurrentUser.GroupBy(g => g.Sender).Count();
+
+                infoMessagesResponse.NumberOfUnreadMessagesWithUsers = messageNumber;
+                infoMessagesResponse.HasUnreadMessages = true;              
+            }
+            else
+            {
+                infoMessagesResponse.NumberOfUnreadMessagesWithUsers = 0;
+                infoMessagesResponse.HasUnreadMessages = false;
+            }
+            return Ok(infoMessagesResponse);
         }
 
         [HttpPost("{userId}")]
