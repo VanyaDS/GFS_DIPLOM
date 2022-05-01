@@ -147,7 +147,7 @@ namespace GeoFlat.Server.Automapper
                 .ForMember(dest => dest.RecipientSurname, opt => opt.MapFrom(src => src.UserRecipient.Surname))
                 .ForMember(dest => dest.RecipientPhoneNumber, opt => opt.MapFrom(src => src.UserRecipient.PhoneNumber))
                 .ForMember(dest => dest.SenderRole, opt => opt.MapFrom(src => src.UserSender.Account.Role))
-                .ForMember(dest => dest.SenderRole, opt => opt.MapFrom(src => src.UserRecipient.Account.Role))
+                .ForMember(dest => dest.RecipientRole, opt => opt.MapFrom(src => src.UserRecipient.Account.Role))
                 .ForMember(dest => dest.RecipientEmail, opt => opt.MapFrom(src => src.UserRecipient.Account.Email));
         }
     }

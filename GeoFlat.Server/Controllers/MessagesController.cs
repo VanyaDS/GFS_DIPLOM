@@ -80,7 +80,12 @@ namespace GeoFlat.Server.Controllers
             {
                 foreach (var message in resultMessageList)
                 {
-                    messagesResponse.Add(_mapper.Map<MessageResponse>(message));
+                    var resultMessage = _mapper.Map<MessageResponse>(message);
+                    if(resultMessage.SenderId == _UserId)
+                    {
+                        resultMessage.IsRead = true;
+                    }
+                    messagesResponse.Add(resultMessage);
                 }
             }
             return Ok(messagesResponse);
