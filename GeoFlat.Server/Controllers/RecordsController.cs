@@ -63,6 +63,44 @@ namespace GeoFlat.Server.Controllers
             return Ok(recordsResponse);
         }
 
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetFilteredRecords([FromBody] FilterModel filters)
+        {
+            if(filters is null)
+            {
+                return BadRequest();
+            }
+
+            if (!_memoryCache.TryGetValue("key_currency", out CurrencyConverter model))
+            {
+                return StatusCode(500, "Internal server error with currency service");
+            }
+
+            var records = await _unitOfWork.Records.All();
+
+            IEnumerable<Record> filteredRecords = null;
+            if (records is not null)
+            {
+                 filteredRecords = FiltersHealper.GetFilteredRecords(records, filters);
+            }
+            
+            List<RecordResponse> recordsResponse = new List<RecordResponse>();
+
+            if (filteredRecords is not null)
+            {
+                foreach (var record in filteredRecords)
+                {
+                    recordsResponse.Add(_mapper.Map<RecordResponse>(record));
+                }
+
+                foreach (var record in recordsResponse)
+                {
+                    record.PriceBYN = model.ConvertFromUSDToBYN(record.Price);
+                }
+            }
+            return Ok(recordsResponse);
+        }
+
         [HttpGet("me")]
         [Authorize(Roles = RoleHealper.CLIENT)]
         public async Task<IActionResult> GetCurrentUserRecords()
