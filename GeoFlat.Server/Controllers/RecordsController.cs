@@ -75,7 +75,6 @@ namespace GeoFlat.Server.Controllers
             {
                 return StatusCode(500, "Internal server error with currency service");
             }
-
             var records = await _unitOfWork.Records.All();
 
             IEnumerable<Record> filteredRecords = null;
