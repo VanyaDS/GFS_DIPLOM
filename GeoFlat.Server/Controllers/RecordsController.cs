@@ -63,7 +63,7 @@ namespace GeoFlat.Server.Controllers
             return Ok(recordsResponse);
         }
 
-        [HttpGet("filters")]
+        [HttpPost("filters")]
         public async Task<IActionResult> GetFilteredRecords([FromBody] FilterModel filters)
         {
             if(filters is null)
