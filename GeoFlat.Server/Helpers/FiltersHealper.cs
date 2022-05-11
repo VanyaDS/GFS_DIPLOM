@@ -27,7 +27,7 @@ namespace GeoFlat.Server.Helpers
             {
                 if (filters.MaxPrice.Value > 0 && filters.MaxPrice.Value < int.MaxValue)
                 {
-                    filteredRecords = filteredRecords.Where(records => records.Price <= filters.MinPrice.Value);
+                    filteredRecords = filteredRecords.Where(records => records.Price <= filters.MaxPrice.Value);
                 }
             }
             if (!string.IsNullOrEmpty(filters.CityName))
